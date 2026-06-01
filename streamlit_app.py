@@ -1,8 +1,8 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import json
-import time
 import os
-from datetime import datetime
+import re
 
 # Set page config
 st.set_page_config(
@@ -11,8 +11,8 @@ st.set_page_config(
     layout="centered"
 )
 
-# Custom HSL and Material You tokens matching Gemini mobile replica
-gemini_css = """
+# Custom styles to wrap Streamlit HTML component container in an iPhone mockup frame
+st.markdown("""
 <style>
     /* Dark Theme Global Reset */
     .stApp {
@@ -20,408 +20,272 @@ gemini_css = """
         color: #e3e3e3 !important;
     }
     
-    /* Google Sans style fonts */
-    html, body, [class*="css"] {
-        font-family: 'Google Sans', 'Google Sans Text', -apple-system, sans-serif !important;
-    }
-    
-    /* Center and restrict Streamlit page to mobile screen dimensions ONLY on desktop */
-    @media (min-width: 500px) {
-        [data-testid="stAppViewBlockContainer"], .block-container {
-            max-width: 375px !important;
-            min-height: 812px !important;
-            max-height: 812px !important;
-            border: 12px solid #282a2c !important;
-            border-radius: 40px !important;
-            padding: 30px 20px 20px 20px !important;
-            background-color: #000000 !important;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9) !important;
-            margin: 40px auto !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-        }
-    }
-
-    /* On real mobile screens, make it fill the screen natively */
-    @media (max-width: 499px) {
-        [data-testid="stAppViewBlockContainer"], .block-container {
-            max-width: 100% !important;
-            padding: 15px !important;
-            background-color: #000000 !important;
-            margin: 0 !important;
-        }
-    }
-
-    /* Hide Streamlit default header/footer for clean app-only look */
+    /* Hide Streamlit default header, footer, and menu */
     [data-testid="stHeader"], header, footer {
         display: none !important;
         visibility: hidden !important;
     }
     
-    /* Header styling */
-    .gemini-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 5px 0 15px 0;
-        border-bottom: 1px solid #313332;
+    /* Center and style the HTML container to look exactly like a mobile shell on desktop */
+    @media (min-width: 500px) {
+        [data-testid="stHtml"] {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            background-color: #000000 !important;
+            margin: 40px auto !important;
+            width: 375px !important;
+            height: 812px !important;
+            border: 12px solid #282a2c !important;
+            border-radius: 40px !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9) !important;
+            overflow: hidden !important;
+        }
+        [data-testid="stHtml"] iframe {
+            width: 375px !important;
+            height: 812px !important;
+            border: none !important;
+        }
     }
     
-    .gemini-sparkle {
-        font-size: 20px;
-        background: linear-gradient(135deg, #4285f4, #8ab4f8, #c58af9);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: bold;
-    }
-    
-    .gemini-title {
-        font-size: 16px;
-        font-weight: 500;
-        color: #ffffff;
-        letter-spacing: -0.2px;
-    }
-    
-    /* Cards and Surfaces */
-    .ds-card {
-        background-color: #1e1f20;
-        border-radius: 16px;
-        padding: 20px;
-        margin: 10px 0;
-        border: 1px solid #313332;
-    }
-    
-    /* Greeting Banner */
-    .greeting-text {
-        font-size: 28px;
-        color: #ffffff;
-        line-height: 1.2;
-    }
-    .greeting-sub {
-        font-size: 28px;
-        color: #6e7479;
-        line-height: 1.2;
-        margin-bottom: 8px;
-    }
-    
-    /* Onboarding bubble */
-    .hint-bubble {
-        background-color: #004a77;
-        color: #ffffff;
-        font-size: 11px;
-        padding: 8px 12px;
-        border-radius: 8px;
-        display: inline-block;
-        margin-top: 5px;
-        border-left: 3px solid #8ab4f8;
-    }
-    
-    /* Paradox badge */
-    .paradox-badge {
-        background-color: rgba(253, 214, 99, 0.08);
-        border: 1px solid rgba(253, 214, 99, 0.20);
-        color: #fdd663;
-        padding: 10px 16px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        margin: 10px 0;
-        transition: all 0.2s ease;
-    }
-    
-    /* Speculative block */
-    .speculative-block {
-        background-color: rgba(253, 214, 99, 0.08);
-        border: 1px dashed rgba(253, 214, 99, 0.20);
-        border-radius: 12px;
-        padding: 16px;
-        margin: 10px 0;
-    }
-    
-    /* Accent text */
-    .success-text {
-        color: #81c995 !important;
-        font-size: 12px;
-        font-weight: 500;
-    }
-    
-    .warning-text {
-        color: #fdd663 !important;
-        font-size: 12px;
-        font-weight: 500;
+    /* On mobile screens, let it expand naturally */
+    @media (max-width: 499px) {
+        [data-testid="stHtml"] {
+            width: 100% !important;
+            height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        [data-testid="stHtml"] iframe {
+            width: 100% !important;
+            height: 100vh !important;
+            border: none !important;
+        }
     }
 </style>
-"""
-st.markdown(gemini_css, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
-# Helper functions to load scenarios
-def load_scenario_catalog():
-    path = "src/content/scenarios/index.json"
-    if os.path.exists(path):
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f).get("scenarios", [])
-    return [{"id": "churn-analysis", "title": "Churn Analysis", "default": True}]
-
-def load_scenario_data(scenario_id):
-    path = f"src/content/scenarios/{scenario_id}.json"
-    if os.path.exists(path):
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {}
-
-scenarios_list = load_scenario_catalog()
-scenario_options = {s["title"]: s["id"] for s in scenarios_list}
-
-# Initialize session state variables
-if "active_scenario_title" not in st.session_state:
-    st.session_state.active_scenario_title = list(scenario_options.keys())[0]
-if "show_switcher" not in st.session_state:
-    st.session_state.show_switcher = False
-if "show_history" not in st.session_state:
-    st.session_state.show_history = False
-
-# Watch for scenario switch
-if "last_scenario_title" not in st.session_state or st.session_state.last_scenario_title != st.session_state.active_scenario_title:
-    st.session_state.last_scenario_title = st.session_state.active_scenario_title
-    # Reset state variables for scenario
-    scen_id = scenario_options[st.session_state.active_scenario_title]
-    data = load_scenario_data(scen_id)
-    st.session_state.scenario_data = data
-    st.session_state.current_screen = "ingestion"
-    st.session_state.extra_sources = []
-    st.session_state.grounded_text = data.get("draft", {}).get("groundedParagraph", "")
-    st.session_state.speculative_text = data.get("draft", {}).get("speculativeParagraph", "")
-    st.session_state.show_paradox = True
-    st.session_state.applied_route = None
-    st.session_state.pii_redacted = 0
-    st.session_state.sql_verified = False
-    st.session_state.draft_generated = False
-    if "audit_log" not in st.session_state:
-        st.session_state.audit_log = []
-    st.session_state.audit_log.append({
-        "timestamp": datetime.now().strftime("%H:%M:%S"),
-        "action": f"Switched to scenario: {st.session_state.active_scenario_title}"
-    })
-
-data = st.session_state.scenario_data
-scen_id = scenario_options[st.session_state.active_scenario_title]
-
-# HEADER ACTION BAR (Grid & Clock Icons)
-col_title, col_hist, col_sw = st.columns([6, 1, 1])
-with col_title:
-    # Trigger to open switcher when clicking title
-    clean_title = st.session_state.active_scenario_title.replace("Project: ", "")
-    if st.button(f"✦ {clean_title} ▾", key="title_trigger"):
-        st.session_state.show_switcher = not st.session_state.show_switcher
-        st.session_state.show_history = False
-        st.rerun()
-
-with col_hist:
-    if st.button("🕒", key="btn_history"):
-        st.session_state.show_history = not st.session_state.show_history
-        st.session_state.show_switcher = False
-        st.rerun()
-
-with col_sw:
-    if st.button("🎛️", key="btn_switcher"):
-        st.session_state.show_switcher = not st.session_state.show_switcher
-        st.session_state.show_history = False
-        st.rerun()
-
-# ═══════════════════════════════════
-# OVERLAYS (Switcher / History)
-# ═══════════════════════════════════
-
-# Switcher Overlay
-if st.session_state.show_switcher:
-    st.markdown('<div class="ds-card">', unsafe_allow_html=True)
-    st.markdown("### Switch Project")
-    for title, scenario_id in scenario_options.items():
-        is_active = title == st.session_state.active_scenario_title
-        btn_type = "primary" if is_active else "secondary"
-        if st.button(title, key=f"sw_{scenario_id}", type=btn_type, use_container_width=True):
-            st.session_state.active_scenario_title = title
-            st.session_state.show_switcher = False
-            # Dismiss first-time hint
-            st.session_state["socratic-editor-visited"] = True
-            st.rerun()
-    st.write("")
-    if st.button("Done", use_container_width=True):
-        st.session_state.show_switcher = False
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.stop()
-
-# Decision History Overlay
-if st.session_state.show_history:
-    st.markdown('<div class="ds-card">', unsafe_allow_html=True)
-    st.markdown("### 📋 Decision History (Audit Trail)")
-    for entry in reversed(st.session_state.audit_log):
-        st.markdown(f"**[{entry['timestamp']}]** {entry['action']}")
-    st.write("")
-    if st.button("Close", use_container_width=True):
-        st.session_state.show_history = False
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.stop()
-
-# SCREEN 1: Ingestion Overview
-if st.session_state.current_screen == "ingestion":
-    st.write("")
-    st.markdown('<div class="greeting-text">Hello,</div><div class="greeting-sub">Where should we start?</div>', unsafe_allow_html=True)
-    
-    # Visited onboarding nudge
-    if "socratic-editor-visited" not in st.session_state:
-        st.markdown('<div class="hint-bubble">💡 Tap the project title dropdown in the header to switch projects!</div>', unsafe_allow_html=True)
-
-    # Ground Truth Area
-    st.markdown('<div class="ds-card">', unsafe_allow_html=True)
-    st.markdown("### Linked Ground Truth")
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        if st.button("Add Source"):
-            st.session_state.extra_sources.append("custom_analytics_data.csv")
-            st.session_state.audit_log.append({
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-                "action": "Ingested file: custom_analytics_data.csv"
-            })
-            st.toast("Source custom_analytics_data.csv added!")
-            # Dismiss first-time hint
-            st.session_state["socratic-editor-visited"] = True
-            st.rerun()
-    with col2:
-        if st.button("Load Samples"):
-            st.session_state.extra_sources.append("100_Exit_Surveys.csv")
-            st.session_state.pii_redacted = 2
-            st.session_state.audit_log.append({
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-                "action": "Loaded samples: 100_Exit_Surveys.csv (2 PII fields redacted)"
-            })
-            st.toast("Sample CSV loaded! 2 PII fields redacted.")
-            st.session_state["socratic-editor-visited"] = True
-            st.rerun()
-    with col3:
-        if st.button("Verify SQL"):
-            st.session_state.extra_sources.append("postgres_dropoff_logs.sql")
-            st.session_state.sql_verified = True
-            st.session_state.audit_log.append({
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-                "action": "SQL grounding verified: postgres_dropoff_logs.sql"
-            })
-            st.toast("Database schema verified!")
-            st.session_state["socratic-editor-visited"] = True
-            st.rerun()
-            
-    # List current sources
-    st.markdown("#### Loaded Sources:")
-    default_sources = [s["name"] for s in data.get("groundTruth", [])]
-    all_sources = default_sources + st.session_state.extra_sources
-    for src in all_sources:
-        icon = "📊" if ".sql" in src else "📄"
-        st.markdown(f"{icon} `{src}`")
+def build_inlined_html():
+    # 1. Read build index.html
+    index_path = "dist/index.html"
+    if not os.path.exists(index_path):
+        return "<h3>Error: Please build the project first by running `npm run build` or running the build script.</h3>"
         
-    # PII Notice & Ingest Status
-    if st.session_state.pii_redacted > 0:
-        st.markdown(f'<span class="warning-text">⚠️ {st.session_state.pii_redacted} PII fields redacted before grounding</span>', unsafe_allow_html=True)
-    if st.session_state.sql_verified:
-        st.markdown('<span class="success-text">✓ Context Fully Grounded (2M Window Active)</span>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    with open(index_path, "r", encoding="utf-8") as f:
+        html = f.read()
+        
+    # Strip index.html default body centering & shell size to fit perfectly inside the iframe
+    html = html.replace(
+        '<body style="background:#000; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem;">',
+        '<body style="background:#000; margin:0; padding:0; overflow:hidden; height:100vh; width:100vw;">'
+    )
     
-    st.write("")
-    if st.button(f"Generate {clean_title} Framework →", type="primary", use_container_width=True):
-        st.session_state.current_screen = "draft"
-        st.session_state.is_generating = True
-        st.session_state["socratic-editor-visited"] = True
-        st.rerun()
+    html = html.replace(
+        'style="width:375px; height:812px; border-radius:40px; overflow:hidden;"',
+        'style="width:100%; height:100%; border-radius:0; overflow:hidden;"'
+    )
 
-# SCREEN 2: The Honest Draft
-elif st.session_state.current_screen == "draft":
-    st.write("")
+    # 2. Inline App Bundle CSS
+    css_path = "dist/css/app.bundle.css"
+    if os.path.exists(css_path):
+        with open(css_path, "r", encoding="utf-8") as f:
+            css_content = f.read()
+        html = html.replace('<link rel="stylesheet" href="css/app.bundle.css">', f"<style>{css_content}</style>")
+
+    # 3. Read scenarios JSON and construct scenario dict to inject
+    scenarios = {}
+    scenarios_dir = "dist/content/scenarios"
+    index_json_path = os.path.join(scenarios_dir, "index.json")
     
-    # Back button
-    if st.button("← Go Back", use_container_width=True):
-        st.session_state.current_screen = "ingestion"
-        st.session_state.draft_generated = False
-        st.rerun()
+    if os.path.exists(index_json_path):
+        with open(index_json_path, "r", encoding="utf-8") as f:
+            index_data = json.load(f)
+            scenarios_index = index_data.get("scenarios", [])
+            
+        for s in scenarios_index:
+            s_id = s["id"]
+            scenario_path = os.path.join(scenarios_dir, f"{s_id}.json")
+            if os.path.exists(scenario_path):
+                with open(scenario_path, "r", encoding="utf-8") as f:
+                    scenarios[s_id] = json.load(f)
+    else:
+        scenarios_index = [{"id": "churn-analysis", "title": "Churn Analysis", "default": True}]
+        scenarios = {}
+
+    # 4. Inject Mock Fetch Interceptor (before any script tags)
+    mock_fetch_js = f"""
+    <script>
+      (function() {{
+        const scenarioIndex = {json.dumps(scenarios_index)};
+        const scenarioData = {json.dumps(scenarios)};
+        let sessionState = {{}};
+        let auditEntries = [];
         
-    st.markdown("## Analytical Draft Framework")
-    st.caption("Generated by Gemini (Simulated Stream)")
+        const originalFetch = window.fetch;
+        window.fetch = async function(url, options) {{
+          const pathname = url.split('?')[0];
+          
+          if (pathname.startsWith('/api/')) {{
+            // Intercept all API endpoints
+            if (pathname === '/api/health') {{
+              return new Response(JSON.stringify({{ ok: true, geminiConfigured: false, model: 'simulated' }}), {{
+                headers: {{ 'Content-Type': 'application/json' }}
+              }});
+            }}
+            if (pathname === '/api/self-test') {{
+              return new Response(JSON.stringify({{ ok: true, checks: [] }}), {{
+                headers: {{ 'Content-Type': 'application/json' }}
+              }});
+            }}
+            if (pathname === '/api/scenarios') {{
+              return new Response(JSON.stringify({{ scenarios: scenarioIndex }}), {{
+                headers: {{ 'Content-Type': 'application/json' }}
+              }});
+            }}
+            if (pathname.startsWith('/api/scenarios/')) {{
+              const id = pathname.split('/').pop();
+              return new Response(JSON.stringify(scenarioData[id] || {{}}), {{
+                headers: {{ 'Content-Type': 'application/json' }}
+              }});
+            }}
+            if (pathname === '/api/ingest') {{
+              const body = options?.body ? JSON.parse(options.body) : {{}};
+              const rawFiles = body.files || [];
+              const verified = rawFiles.map(f => ({{
+                type: f.name.endsWith('.sql') ? 'database' : 'file',
+                name: f.name,
+                icon: f.name.endsWith('.sql') ? 'database' : 'document',
+                content: f.content
+              }}));
+              
+              return new Response(JSON.stringify({{
+                grounded: true,
+                verified: verified,
+                rejected: [],
+                piiRedactions: verified.length > 0 ? 2 : 0,
+                contextWindow: {{ active: true, utilizationPct: 0.02, usedTokens: 400, maxTokens: 2000000, label: 'Context Fully Grounded (2M Window Active)' }}
+              }}), {{
+                headers: {{ 'Content-Type': 'application/json' }}
+              }});
+            }}
+            if (pathname === '/api/connect-database') {{
+              return new Response(JSON.stringify({{ connected: true, mode: 'sql_file', securityNote: 'grounded', verified: [{{ type: 'database', name: 'postgres_dropoff_logs.sql', icon: 'database' }}], grounding: {{ label: 'SQL database schema loaded', grounded: true }} }}), {{
+                headers: {{ 'Content-Type': 'application/json' }}
+              }});
+            }}
+            if (pathname.startsWith('/api/state/')) {{
+              const id = pathname.split('/').pop();
+              if (options?.method === 'POST') {{
+                sessionState[id] = options.body ? JSON.parse(options.body) : {{}};
+              }}
+              return new Response(JSON.stringify(sessionState[id] || {{}}), {{
+                headers: {{ 'Content-Type': 'application/json' }}
+              }});
+            }}
+            if (pathname === '/api/audit') {{
+              if (options?.method === 'POST') {{
+                const body = options.body ? JSON.parse(options.body) : {{}};
+                const cleanAction = body.action === 'pivot' ? `Applied Pivot: ${{body.metadata?.routeId?.toUpperCase()}}` :
+                                    body.action === 'generate' ? 'Generated analytical draft framework' :
+                                    body.action === 'ingest' ? `Ingested ${{body.metadata?.filesCount}} file(s)` : body.action;
+                auditEntries.push({{
+                  action: body.action,
+                  scenarioId: body.scenarioId,
+                  timestamp: new Date().toLocaleTimeString(),
+                  metadata: body.metadata || {{}},
+                  // mock structure mapping
+                  actionLabel: cleanAction
+                }});
+                return new Response(JSON.stringify({{ ok: true }}), {{ headers: {{ 'Content-Type': 'application/json' }} }});
+              }} else {{
+                // GET
+                // map structures to client list format
+                const entries = auditEntries.map(e => ({{
+                  action: e.action,
+                  scenarioId: e.scenarioId,
+                  timestamp: e.timestamp,
+                  actionLabel: e.actionLabel,
+                  metadata: e.metadata
+                }}));
+                return new Response(JSON.stringify({{ entries: entries }}), {{
+                  headers: {{ 'Content-Type': 'application/json' }}
+                }});
+              }}
+            }}
+            if (pathname === '/api/generate-draft') {{
+              const body = options?.body ? JSON.parse(options.body) : {{}};
+              const id = body.scenarioId || 'churn-analysis';
+              const scenario = scenarioData[id];
+              const draft = scenario.draft;
+              const confession = scenario.confession.metaCommentary;
+              
+              const encoder = new TextEncoder();
+              const stream = new ReadableStream({{
+                async start(controller) {{
+                  const send = (event, data) => {{
+                    const chunk = `event: ${{event}}\\ndata: ${{JSON.stringify(data)}}\\n\\n`;
+                    controller.enqueue(encoder.encode(chunk));
+                  }};
+                  
+                  send('start', {{ mode: 'simulated', scenarioId: id }});
+                  
+                  const fullText = `[GROUNDED]\\n${{draft.groundedParagraph}}\\n\\n[SPECULATIVE]\\n${{draft.speculativeParagraph}}\\n\\n[CONFESSION]\\n${{confession}}`;
+                  const words = fullText.split(/(\\s+)/);
+                  for (const word of words) {{
+                    send('token', {{ text: word }});
+                    await new Promise(r => setTimeout(r, 15));
+                  }
+                  
+                  send('complete', {{
+                    draft: {{
+                      groundedParagraph: draft.groundedParagraph,
+                      speculativeParagraph: draft.speculativeParagraph,
+                      paradoxBadgeLabel: draft.paradoxBadgeLabel
+                    }},
+                    confession: {{ metaCommentary: confession }},
+                    paradox: {{ hasParadox: true, confidence: 0.85, badgeLabel: draft.paradoxBadgeLabel, reason: 'surveys vs logs' }}
+                  }});
+                  controller.close();
+                }}
+              }});
+              
+              return new Response(stream, {{
+                headers: {{ 'Content-Type': 'text/event-stream' }}
+              }});
+            }}
+          }}
+          
+          return originalFetch(url, options);
+        }};
+      }})();
+    </script>
+    """
     
-    # Streaming Simulation
-    if st.session_state.is_generating:
-        st.markdown("### ✦ Thinking...")
-        progress_bar = st.progress(0)
-        for i in range(100):
-            time.sleep(0.015)
-            progress_bar.progress(i + 1)
-        st.session_state.is_generating = False
-        st.session_state.draft_generated = True
-        st.session_state.audit_log.append({
-            "timestamp": datetime.now().strftime("%H:%M:%S"),
-            "action": "Generated analytical draft framework"
-        })
-        st.rerun()
+    # Insert mock fetch right before the first script tag
+    idx = html.find('<script')
+    if idx != -1:
+        html = html[:idx] + mock_fetch_js + html[idx:]
         
-    if st.session_state.draft_generated:
-        # Grounded block
-        st.markdown("### Grounded Analysis")
-        # In Streamlit, make the text editable via text_area directly to show the passive editing feature
-        edited_grounded = st.text_area(
-            "Tap to edit grounded paragraph:",
-            value=st.session_state.grounded_text,
-            height=120,
-            key="grounded_text_area"
-        )
-        if edited_grounded != st.session_state.grounded_text:
-            st.session_state.grounded_text = edited_grounded
-            st.session_state.audit_log.append({
-                "timestamp": datetime.now().strftime("%H:%M:%S"),
-                "action": "Edited grounded analysis paragraph"
-            })
-            
-        # Socratic Confession / Paradox Inspector
-        if st.session_state.show_paradox:
-            st.markdown('<div class="warning-text" style="margin-top:10px;">⚠️ Data Paradox Detected: User logs contradict exit surveys.</div>', unsafe_allow_html=True)
-            with st.expander("🤔 Tap here to inspect Socratic Confession"):
-                confession = data.get("confession", {})
-                st.markdown(f"#### {confession.get('title', 'Internal Disagreement')}")
-                st.write(confession.get("metaCommentary", ""))
-                
-                # Routes Selection
-                routes = confession.get("routes", [])
-                route_options_ui = {r["label"]: r["id"] for r in routes}
-                selected_route_label = st.radio("Choose structural route:", list(route_options_ui.keys()))
-                selected_route_id = route_options_ui[selected_route_label]
-                
-                if st.button("Apply Structural Pivot"):
-                    # Overwrite text with selected route variant
-                    variant = data.get("pivotVariants", {}).get(selected_route_id, {})
-                    st.session_state.grounded_text = variant.get("groundedParagraph", "")
-                    st.session_state.speculative_text = variant.get("speculativeParagraph", "")
-                    st.session_state.show_paradox = variant.get("showParadox", False)
-                    st.session_state.applied_route = selected_route_id
-                    
-                    # Log to audit trail
-                    st.session_state.audit_log.append({
-                        "timestamp": datetime.now().strftime("%H:%M:%S"),
-                        "action": f"Applied Pivot: {selected_route_label}"
-                    })
-                    
-                    # Toast message explaining structural change
-                    explanation = "Pivot Applied: Draft rewritten to focus on Qualitative/Pricing signal. Paradox resolved!" if selected_route_id == "route-b" else "Baseline Reverted: Restored baseline onboarding wizard draft (paradox active)."
-                    st.toast(explanation)
-                    st.rerun()
-                    
-        # Speculative block
-        if st.session_state.speculative_text:
-            st.markdown("### Speculative Section")
-            block_class = "ds-card" if not st.session_state.show_paradox else "speculative-block"
-            st.markdown(f'<div class="{block_class}"><i>{st.session_state.speculative_text}</i></div>', unsafe_allow_html=True)
-            
-        if st.session_state.applied_route:
-            st.markdown(f'<span class="success-text">✓ Applied Structural Pivot: {st.session_state.applied_route.upper()}</span>', unsafe_allow_html=True)
+    # 5. Inline JavaScript Files
+    script_regex = re.compile(r'<script src="js/([^"]+)"></script>')
+    
+    def replace_script(match):
+        js_file = match.group(1)
+        js_path = f"dist/js/{js_file}"
+        if os.path.exists(js_path):
+            with open(js_path, "r", encoding="utf-8") as f:
+                js_content = f.read()
+            return f"<script>{js_content}</script>"
+        return match.group(0)
+        
+    html = script_regex.sub(replace_script, html)
+    return html
+
+# Build the html content
+inlined_html = build_inlined_html()
+
+# Display the inlined HTML frame in Streamlit
+components.html(inlined_html, height=788)
