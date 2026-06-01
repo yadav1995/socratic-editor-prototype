@@ -1194,7 +1194,7 @@ ul { list-style: none; }
 .tour-highlight {
   position: relative !important;
   z-index: 1005 !important;
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 15px var(--g-primary) !important;
+  box-shadow: 0 0 0 9999px rgba(255, 255, 255, 0.3), 0 0 15px var(--g-primary) !important;
   pointer-events: auto !important;
 }
 
