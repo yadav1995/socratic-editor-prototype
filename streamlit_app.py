@@ -237,7 +237,7 @@ def build_inlined_html():
                   for (const word of words) {{
                     send('token', {{ text: word }});
                     await new Promise(r => setTimeout(r, 15));
-                  }
+                  }}
                   
                   send('complete', {{
                     draft: {{
