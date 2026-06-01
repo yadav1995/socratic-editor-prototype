@@ -8,8 +8,7 @@ from datetime import datetime
 st.set_page_config(
     page_title="The Socratic Editor",
     page_icon="✦",
-    layout="centered",
-    initial_sidebar_state="expanded"
+    layout="centered"
 )
 
 # Custom HSL and Material You tokens matching Gemini mobile replica
@@ -26,17 +25,50 @@ gemini_css = """
         font-family: 'Google Sans', 'Google Sans Text', -apple-system, sans-serif !important;
     }
     
+    /* Center and restrict Streamlit page to mobile screen dimensions ONLY on desktop */
+    @media (min-width: 500px) {
+        [data-testid="stAppViewBlockContainer"], .block-container {
+            max-width: 375px !important;
+            min-height: 812px !important;
+            max-height: 812px !important;
+            border: 12px solid #282a2c !important;
+            border-radius: 40px !important;
+            padding: 30px 20px 20px 20px !important;
+            background-color: #000000 !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9) !important;
+            margin: 40px auto !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+    }
+
+    /* On real mobile screens, make it fill the screen natively */
+    @media (max-width: 499px) {
+        [data-testid="stAppViewBlockContainer"], .block-container {
+            max-width: 100% !important;
+            padding: 15px !important;
+            background-color: #000000 !important;
+            margin: 0 !important;
+        }
+    }
+
+    /* Hide Streamlit default header/footer for clean app-only look */
+    [data-testid="stHeader"], header, footer {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
     /* Header styling */
     .gemini-header {
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 10px 0 20px 0;
+        padding: 5px 0 15px 0;
         border-bottom: 1px solid #313332;
     }
     
     .gemini-sparkle {
-        font-size: 24px;
+        font-size: 20px;
         background: linear-gradient(135deg, #4285f4, #8ab4f8, #c58af9);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -44,7 +76,7 @@ gemini_css = """
     }
     
     .gemini-title {
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 500;
         color: #ffffff;
         letter-spacing: -0.2px;
@@ -82,7 +114,6 @@ gemini_css = """
         display: inline-block;
         margin-top: 5px;
         border-left: 3px solid #8ab4f8;
-        animation: pulse 2s infinite;
     }
     
     /* Paradox badge */
@@ -148,6 +179,10 @@ scenario_options = {s["title"]: s["id"] for s in scenarios_list}
 # Initialize session state variables
 if "active_scenario_title" not in st.session_state:
     st.session_state.active_scenario_title = list(scenario_options.keys())[0]
+if "show_switcher" not in st.session_state:
+    st.session_state.show_switcher = False
+if "show_history" not in st.session_state:
+    st.session_state.show_history = False
 
 # Watch for scenario switch
 if "last_scenario_title" not in st.session_state or st.session_state.last_scenario_title != st.session_state.active_scenario_title:
@@ -175,46 +210,73 @@ if "last_scenario_title" not in st.session_state or st.session_state.last_scenar
 data = st.session_state.scenario_data
 scen_id = scenario_options[st.session_state.active_scenario_title]
 
-# SIDEBAR: Project Switcher & Audit History
-with st.sidebar:
-    st.markdown('<div class="gemini-header"><span class="gemini-sparkle">✦</span><span class="gemini-title">Project Panel</span></div>', unsafe_allow_html=True)
-    st.write("")
-    
-    # Switcher Dropdown
-    selected_title = st.selectbox(
-        "Active Project Scenario",
-        options=list(scenario_options.keys()),
-        key="active_scenario_title"
-    )
-    
-    st.write("---")
-    st.markdown("### 📋 Decision History (Audit Trail)")
-    if st.session_state.audit_log:
-        for entry in reversed(st.session_state.audit_log):
-            st.markdown(f"**[{entry['timestamp']}]** {entry['action']}")
-    else:
-        st.write("No events logged yet.")
+# HEADER ACTION BAR (Grid & Clock Icons)
+col_title, col_hist, col_sw = st.columns([6, 1, 1])
+with col_title:
+    # Trigger to open switcher when clicking title
+    clean_title = st.session_state.active_scenario_title.replace("Project: ", "")
+    if st.button(f"✦ {clean_title} ▾", key="title_trigger"):
+        st.session_state.show_switcher = not st.session_state.show_switcher
+        st.session_state.show_history = False
+        st.rerun()
 
-# MAIN PAGE HEADER
-header_html = f"""
-<div class="gemini-header">
-    <span class="gemini-sparkle">✦</span>
-    <span class="gemini-title">{st.session_state.active_scenario_title} ▾</span>
-</div>
-"""
-st.markdown(header_html, unsafe_allow_html=True)
+with col_hist:
+    if st.button("🕒", key="btn_history"):
+        st.session_state.show_history = not st.session_state.show_history
+        st.session_state.show_switcher = False
+        st.rerun()
+
+with col_sw:
+    if st.button("🎛️", key="btn_switcher"):
+        st.session_state.show_switcher = not st.session_state.show_switcher
+        st.session_state.show_history = False
+        st.rerun()
+
+# ═══════════════════════════════════
+# OVERLAYS (Switcher / History)
+# ═══════════════════════════════════
+
+# Switcher Overlay
+if st.session_state.show_switcher:
+    st.markdown('<div class="ds-card">', unsafe_allow_html=True)
+    st.markdown("### Switch Project")
+    for title, scenario_id in scenario_options.items():
+        is_active = title == st.session_state.active_scenario_title
+        btn_type = "primary" if is_active else "secondary"
+        if st.button(title, key=f"sw_{scenario_id}", type=btn_type, use_container_width=True):
+            st.session_state.active_scenario_title = title
+            st.session_state.show_switcher = False
+            # Dismiss first-time hint
+            st.session_state["socratic-editor-visited"] = True
+            st.rerun()
+    st.write("")
+    if st.button("Done", use_container_width=True):
+        st.session_state.show_switcher = False
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.stop()
+
+# Decision History Overlay
+if st.session_state.show_history:
+    st.markdown('<div class="ds-card">', unsafe_allow_html=True)
+    st.markdown("### 📋 Decision History (Audit Trail)")
+    for entry in reversed(st.session_state.audit_log):
+        st.markdown(f"**[{entry['timestamp']}]** {entry['action']}")
+    st.write("")
+    if st.button("Close", use_container_width=True):
+        st.session_state.show_history = False
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.stop()
 
 # SCREEN 1: Ingestion Overview
 if st.session_state.current_screen == "ingestion":
     st.write("")
     st.markdown('<div class="greeting-text">Hello,</div><div class="greeting-sub">Where should we start?</div>', unsafe_allow_html=True)
     
-    # Visited nudge
+    # Visited onboarding nudge
     if "socratic-editor-visited" not in st.session_state:
-        st.markdown('<div class="hint-bubble">💡 Tap the left sidebar dropdown to switch between projects!</div>', unsafe_allow_html=True)
-        if st.button("Got it"):
-            st.session_state["socratic-editor-visited"] = True
-            st.rerun()
+        st.markdown('<div class="hint-bubble">💡 Tap the project title dropdown in the header to switch projects!</div>', unsafe_allow_html=True)
 
     # Ground Truth Area
     st.markdown('<div class="ds-card">', unsafe_allow_html=True)
@@ -223,12 +285,14 @@ if st.session_state.current_screen == "ingestion":
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.button("Add Source"):
-            st.toast("Add Source: Uploading mock file ingestion...")
             st.session_state.extra_sources.append("custom_analytics_data.csv")
             st.session_state.audit_log.append({
                 "timestamp": datetime.now().strftime("%H:%M:%S"),
                 "action": "Ingested file: custom_analytics_data.csv"
             })
+            st.toast("Source custom_analytics_data.csv added!")
+            # Dismiss first-time hint
+            st.session_state["socratic-editor-visited"] = True
             st.rerun()
     with col2:
         if st.button("Load Samples"):
@@ -238,7 +302,8 @@ if st.session_state.current_screen == "ingestion":
                 "timestamp": datetime.now().strftime("%H:%M:%S"),
                 "action": "Loaded samples: 100_Exit_Surveys.csv (2 PII fields redacted)"
             })
-            st.toast("Sample CSV loaded! 2 email fields redacted.")
+            st.toast("Sample CSV loaded! 2 PII fields redacted.")
+            st.session_state["socratic-editor-visited"] = True
             st.rerun()
     with col3:
         if st.button("Verify SQL"):
@@ -248,7 +313,8 @@ if st.session_state.current_screen == "ingestion":
                 "timestamp": datetime.now().strftime("%H:%M:%S"),
                 "action": "SQL grounding verified: postgres_dropoff_logs.sql"
             })
-            st.toast("Database schema verified via SQL file!")
+            st.toast("Database schema verified!")
+            st.session_state["socratic-editor-visited"] = True
             st.rerun()
             
     # List current sources
@@ -261,15 +327,16 @@ if st.session_state.current_screen == "ingestion":
         
     # PII Notice & Ingest Status
     if st.session_state.pii_redacted > 0:
-        st.markdown(f'<span class="warning-text">⚠️ {st.session_state.pii_redacted} PII field(s) redacted before grounding</span>', unsafe_allow_html=True)
+        st.markdown(f'<span class="warning-text">⚠️ {st.session_state.pii_redacted} PII fields redacted before grounding</span>', unsafe_allow_html=True)
     if st.session_state.sql_verified:
         st.markdown('<span class="success-text">✓ Context Fully Grounded (2M Window Active)</span>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
     
     st.write("")
-    if st.button(f"Generate {st.session_state.active_scenario_title.replace('Project: ', '')} Framework →", type="primary"):
+    if st.button(f"Generate {clean_title} Framework →", type="primary", use_container_width=True):
         st.session_state.current_screen = "draft"
         st.session_state.is_generating = True
+        st.session_state["socratic-editor-visited"] = True
         st.rerun()
 
 # SCREEN 2: The Honest Draft
@@ -277,7 +344,7 @@ elif st.session_state.current_screen == "draft":
     st.write("")
     
     # Back button
-    if st.button("← Go Back"):
+    if st.button("← Go Back", use_container_width=True):
         st.session_state.current_screen = "ingestion"
         st.session_state.draft_generated = False
         st.rerun()
