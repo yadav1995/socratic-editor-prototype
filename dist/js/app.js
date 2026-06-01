@@ -88,12 +88,14 @@ const App = (() => {
     ScenarioStore.saveScenarioState();
     AuditClient.logGeneration(id, state.lastGenMode);
     ScreenDraft.showStreaming(false);
+    if (typeof OnboardingTour !== 'undefined') OnboardingTour.onGenerateComplete();
   }
 
   function handleGenerationError(err, scenario) {
     ScenarioRenderer.renderDraftScreen(scenario);
     ScreenIngestion.showIngestStatus(`Generation fallback: ${err.message}`);
     ScreenDraft.showStreaming(false);
+    if (typeof OnboardingTour !== 'undefined') OnboardingTour.onGenerateComplete();
   }
 
   function handleApplyPivot() {

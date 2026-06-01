@@ -1,54 +1,62 @@
 /**
- * Onboarding Tour — Interactive step-by-step guided product tour.
+ * Onboarding Tour — Premium Interactive guided product tour.
  */
 const OnboardingTour = (() => {
   const STEPS = [
     {
       targetId: 'logo-trigger',
-      text: '✦ Welcome to Socratic Editor! Click this title to switch between projects (e.g., Churn, Onboarding Funnels).',
+      title: 'Welcome to Socratic Editor',
+      text: 'Tap here to switch between analysis projects (e.g. Churn, Onboarding Funnels) at any time.',
       placement: 'bottom',
       screen: 'ingestion'
     },
     {
       targetId: 'btn-load-samples',
-      text: '1. Ingest Data: Click "Load Samples" to ingest Qualitative user surveys and check context window capacity.',
+      title: 'Step 1: Load Samples',
+      text: 'Click "Load Samples" to automatically ingest exit surveys and upload qualitative inputs into the context window.',
       placement: 'bottom',
       screen: 'ingestion'
     },
     {
       targetId: 'btn-verify-sql',
-      text: '2. Verify SQL: Click "Verify SQL" to verify database schema references and ensure context grounding.',
+      title: 'Step 2: Grounding Verification',
+      text: 'Click "Verify SQL" to verify structural database schemas and ensure your analytical model is grounded in raw data.',
       placement: 'bottom',
       screen: 'ingestion'
     },
     {
       targetId: 'btn-generate-framework',
-      text: '3. Generate Framework: Tap this bottom prompt bar to generate and stream the analytical framework draft.',
+      title: 'Step 3: Stream Framework',
+      text: 'Tap this Gemini-style bottom bar to run LLM streaming and generate your draft analytical framework.',
       placement: 'top',
       screen: 'ingestion'
     },
     {
       targetId: 'draft-grounded',
-      text: '4. Passive Edit: Tapping directly on the Grounded Analysis paragraph lets you edit facts in real-time.',
+      title: 'Step 4: Live Editing',
+      text: 'Tapping directly on any grounded paragraph allows you to edit and update text in real-time, synchronizing with the model.',
       placement: 'bottom',
       screen: 'draft'
     },
     {
       targetId: 'paradox-badge',
-      text: '5. Inspect Conflict: The AI detected a paradox. Tap the warning badge to view the Socratic Confession.',
+      title: 'Step 5: Paradox Detected',
+      text: 'The AI flagged a data paradox! Tap this pulsing warning badge to open the Socratic Confession bottom sheet.',
       placement: 'top',
       screen: 'draft'
     },
     {
       targetId: 'btn-apply-pivot',
-      text: '6. Apply Pivot: Select Route B (Recommended) and click this button to rewrite the draft and resolve the paradox.',
+      title: 'Step 6: Apply Pivot',
+      text: 'Select Route B (Recommended) and tap this button to apply a structural pivot and automatically rewrite the draft.',
       placement: 'top',
       screen: 'draft',
       checkSheetOpen: true
     },
     {
       targetId: 'btn-audit-history',
-      text: '7. Audit Trail: All decisions are stored securely. Click this clock icon to view the Decision History log.',
+      title: 'Step 7: Decision History',
+      text: 'All user choices and model rewrites are logged. Click this clock icon to view the full Decision History audit trail.',
       placement: 'bottom',
       screen: 'ingestion'
     }
@@ -62,6 +70,17 @@ const OnboardingTour = (() => {
     document.getElementById('tour-next')?.addEventListener('click', next);
     document.getElementById('tour-prev')?.addEventListener('click', prev);
     document.getElementById('tour-skip')?.addEventListener('click', end);
+    document.getElementById('tour-close')?.addEventListener('click', end);
+
+    // Reposition on scroll of either main screen container to prevent detachment
+    const reposition = () => {
+      if (!active || currentStepIndex === -1 || !highlightedEl) return;
+      const step = STEPS[currentStepIndex];
+      positionBubble(highlightedEl, step.placement);
+    };
+
+    document.getElementById('main-ingestion')?.addEventListener('scroll', reposition);
+    document.getElementById('main-draft')?.addEventListener('scroll', reposition);
 
     // Only start if not visited yet
     if (!localStorage.getItem('socratic-editor-visited') || localStorage.getItem('socratic-editor-tour-force')) {
@@ -72,6 +91,10 @@ const OnboardingTour = (() => {
   function start() {
     active = true;
     currentStepIndex = 0;
+    
+    // Register global click blocker
+    document.addEventListener('click', handleGlobalClick, true);
+
     showStep(0);
     // Dismiss first-time title hint since we are starting the guided tour
     document.getElementById('first-time-hint')?.classList.add('hidden');
@@ -87,10 +110,9 @@ const OnboardingTour = (() => {
     const step = STEPS[index];
     const targetEl = document.getElementById(step.targetId);
 
-    // If step requires draft screen, switch to it (simulate or wait)
+    // If step requires draft screen, switch to it
     const currentScreen = Router.getCurrentScreen();
     if (step.screen && currentScreen !== step.screen) {
-      // Avoid rendering on incorrect screen
       if (step.screen === 'ingestion') Router.goToIngestion();
       else if (step.screen === 'draft') Router.goToDraft();
     }
@@ -106,23 +128,59 @@ const OnboardingTour = (() => {
     }
 
     if (targetEl) {
+      // Smooth scroll target into view
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
       targetEl.classList.add('tour-highlight');
       highlightedEl = targetEl;
 
       const bubble = document.getElementById('tour-bubble');
+      const titleEl = document.getElementById('tour-title');
       const textEl = document.getElementById('tour-text');
-      const progressEl = document.getElementById('tour-progress');
       const prevBtn = document.getElementById('tour-prev');
       const nextBtn = document.getElementById('tour-next');
+      const dotsContainer = document.getElementById('tour-dots');
 
-      if (bubble && textEl) {
-        textEl.textContent = step.text;
-        if (progressEl) progressEl.textContent = `${index + 1} / ${STEPS.length}`;
+      if (bubble) {
+        if (titleEl) titleEl.textContent = step.title;
+        if (textEl) textEl.textContent = step.text;
+        
+        // Render dots indicator
+        if (dotsContainer) {
+          dotsContainer.innerHTML = '';
+          STEPS.forEach((_, idx) => {
+            const dot = document.createElement('div');
+            dot.className = `tour-dot ${idx === index ? 'tour-dot-active' : ''}`;
+            dotsContainer.appendChild(dot);
+          });
+        }
+
         if (prevBtn) prevBtn.style.display = index === 0 ? 'none' : 'inline-block';
-        if (nextBtn) nextBtn.textContent = index === STEPS.length - 1 ? 'Finish' : 'Next';
+        if (nextBtn) {
+          nextBtn.textContent = index === STEPS.length - 1 ? 'Finish' : 'Next';
+          
+          // Disable "Next" if currently generating
+          const isGenerating = typeof App !== 'undefined' && App.getState()?.isGenerating;
+          if (isGenerating && (index === 3 || index === 4)) {
+            nextBtn.disabled = true;
+            nextBtn.style.opacity = '0.5';
+            nextBtn.style.cursor = 'not-allowed';
+            nextBtn.textContent = 'Streaming…';
+          } else {
+            nextBtn.disabled = false;
+            nextBtn.style.opacity = '1';
+            nextBtn.style.cursor = 'pointer';
+          }
+        }
 
         bubble.classList.remove('hidden');
-        positionBubble(targetEl, step.placement);
+
+        // Position bubble after scroll finishes
+        setTimeout(() => {
+          if (active && currentStepIndex === index) {
+            positionBubble(targetEl, step.placement);
+          }
+        }, 150);
       }
     } else {
       // Target not found, skip to next
@@ -145,22 +203,40 @@ const OnboardingTour = (() => {
 
     bubble.classList.remove('tour-bubble-bottom', 'tour-bubble-top');
 
-    // Handle placement positioning
+    // Position bubble above or below target
+    let bubbleTop = 0;
+    let bubbleLeft = left + width / 2 - bubble.offsetWidth / 2;
+
     if (placement === 'bottom') {
-      bubble.style.top = `${top + height + 10}px`;
-      bubble.style.left = `${left + width / 2 - 130}px`;
+      bubbleTop = top + height + 10;
       bubble.classList.add('tour-bubble-bottom');
     } else {
-      bubble.style.top = `${top - bubble.offsetHeight - 12}px`;
-      bubble.style.left = `${left + width / 2 - 130}px`;
+      bubbleTop = top - bubble.offsetHeight - 12;
       bubble.classList.add('tour-bubble-top');
     }
 
-    // Restrict within app-viewport boundaries
-    const bubbleLeft = parseFloat(bubble.style.left);
-    if (bubbleLeft < 10) bubble.style.left = '10px';
-    if (bubbleLeft > viewportRect.width - 270) {
-      bubble.style.left = `${viewportRect.width - 270}px`;
+    bubble.style.top = `${bubbleTop}px`;
+    bubble.style.left = `${bubbleLeft}px`;
+
+    // Restrict bubble within app-viewport horizontal boundaries (with 10px margin)
+    const minLeft = 10;
+    const maxLeft = viewportRect.width - bubble.offsetWidth - 10;
+    let restrictedLeft = bubbleLeft;
+
+    if (restrictedLeft < minLeft) restrictedLeft = minLeft;
+    if (restrictedLeft > maxLeft) restrictedLeft = maxLeft;
+
+    bubble.style.left = `${restrictedLeft}px`;
+
+    // Align the arrow dynamically to point exactly at target center
+    const arrow = bubble.querySelector('.tour-arrow');
+    if (arrow) {
+      const relativeCenter = (left + width / 2) - restrictedLeft;
+      // Constrain arrow within the bubble width (with 16px margin on edges)
+      const minArrowLeft = 16;
+      const maxArrowLeft = bubble.offsetWidth - 16;
+      const arrowLeft = Math.max(minArrowLeft, Math.min(maxArrowLeft, relativeCenter));
+      arrow.style.left = `${arrowLeft}px`;
     }
   }
 
@@ -185,6 +261,10 @@ const OnboardingTour = (() => {
   function end() {
     active = false;
     currentStepIndex = -1;
+
+    // Unregister global click blocker
+    document.removeEventListener('click', handleGlobalClick, true);
+
     if (highlightedEl) {
       highlightedEl.classList.remove('tour-highlight');
       highlightedEl = null;
@@ -192,6 +272,33 @@ const OnboardingTour = (() => {
     document.getElementById('tour-bubble')?.classList.add('hidden');
     localStorage.setItem('socratic-editor-visited', 'true');
     localStorage.removeItem('socratic-editor-tour-force');
+  }
+
+  // Intercept all clicks outside the active tour element and the bubble to enforce focus
+  function handleGlobalClick(e) {
+    if (!active) return;
+
+    // Allow clicks inside tour bubble
+    const bubble = document.getElementById('tour-bubble');
+    if (bubble && bubble.contains(e.target)) {
+      return;
+    }
+
+    // Allow clicks inside the highlighted element
+    if (highlightedEl && highlightedEl.contains(e.target)) {
+      return;
+    }
+
+    // Block and consume everything else!
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Trigger shake animation to guide the user visually
+    if (bubble) {
+      bubble.classList.remove('tour-bubble-shake');
+      void bubble.offsetWidth; // trigger reflow
+      bubble.classList.add('tour-bubble-shake');
+    }
   }
 
   // Event hooks to align steps with user actions
@@ -212,6 +319,13 @@ const OnboardingTour = (() => {
       // Advance to step 4 (passive edit) when screen draft loads
       currentStepIndex = 4;
       setTimeout(() => showStep(4), 100);
+    }
+  }
+
+  function onGenerateComplete() {
+    if (!active) return;
+    if (currentStepIndex === 4) {
+      showStep(4);
     }
   }
 
@@ -237,5 +351,5 @@ const OnboardingTour = (() => {
     return active;
   }
 
-  return { init, start, next, prev, end, onAction, onGenerate, onSheetOpen, onPivotApplied, isActive };
+  return { init, start, next, prev, end, onAction, onGenerate, onGenerateComplete, onSheetOpen, onPivotApplied, isActive };
 })();
