@@ -1,0 +1,42 @@
+{
+  "id": "feature-adoption",
+  "project": {
+    "title": "Project: Feature Adoption",
+    "poweredBy": "Powered by Gemini"
+  },
+  "groundTruth": [
+    { "type": "file", "name": "user_cohort_engagement.csv", "icon": "document" },
+    { "type": "database", "name": "analytics_feature_events.sql", "icon": "database" }
+  ],
+  "contextStatus": {
+    "label": "Context Fully Grounded (2M Window Active)",
+    "grounded": true
+  },
+  "draft": {
+    "groundedParagraph": "Engagement data from 2,400 active users shows that power users (top 10%) account for 62% of feature interactions, while 45% of new signups never activate the core workflow within their first 14 days.",
+    "speculativeParagraph": "To close the activation gap, we should add a guided feature tour and gamified onboarding badges to drive discovery of advanced capabilities.",
+    "paradoxBadgeLabel": "⚠️ Data Paradox Tap to inspect"
+  },
+  "confession": {
+    "title": "🤔 Internal Disagreement (Speculative Logic)",
+    "metaCommentary": "I recommended gamified discovery because event logs show low feature click-through rates. However, user interviews reveal that 58% of inactive users already know about the features — they simply don't perceive enough value to adopt them. My activation framework might be masking a value-proposition issue.",
+    "routes": [
+      { "id": "route-a", "label": "Route A: Guided Feature Tour & Gamification (Current Baseline)" },
+      { "id": "route-b", "label": "Route B: Pivot to Value Proposition Messaging (Recommended Shift)", "recommended": true }
+    ],
+    "applyButtonLabel": "Apply Structural Pivot"
+  },
+  "pivotVariants": {
+    "route-a": {
+      "groundedParagraph": "Engagement data from 2,400 active users shows that power users (top 10%) account for 62% of feature interactions, while 45% of new signups never activate the core workflow within their first 14 days.",
+      "speculativeParagraph": "To close the activation gap, we should add a guided feature tour and gamified onboarding badges to drive discovery of advanced capabilities.",
+      "showParadox": true
+    },
+    "route-b": {
+      "groundedParagraph": "Engagement data from 2,400 active users shows that power users (top 10%) account for 62% of feature interactions. User interviews confirm 58% of inactive users are aware of features but reject them due to unclear value — not discoverability gaps.",
+      "speculativeParagraph": "Recommend reframing value proposition messaging: lead with outcome-based copy at activation touchpoints, add social proof from power-user cohorts, and A/B test benefit-first vs feature-first onboarding.",
+      "showParadox": false
+    }
+  },
+  "generatePrompt": "Generate a feature adoption framework draft. Ground truth: cohort engagement CSV (45% never activate in 14 days, power users = 62% of interactions) and feature event SQL logs (low click-through). Speculative section should propose gamified feature tours. Confession should explain paradox between low discovery metrics vs users already knowing features but rejecting value."
+}

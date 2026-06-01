@@ -1,0 +1,42 @@
+{
+  "id": "onboarding-funnel",
+  "project": {
+    "title": "Project: Onboarding Funnel",
+    "poweredBy": "Powered by Gemini"
+  },
+  "groundTruth": [
+    { "type": "file", "name": "funnel_completion_rates.csv", "icon": "document" },
+    { "type": "database", "name": "session_replay_metadata.sql", "icon": "database" }
+  ],
+  "contextStatus": {
+    "label": "Context Fully Grounded (2M Window Active)",
+    "grounded": true
+  },
+  "draft": {
+    "groundedParagraph": "Funnel analytics across 1,800 trial signups show a 34% completion rate for the five-step setup wizard, with step three (integration configuration) recording the highest abandonment at 22% of all drop-offs.",
+    "speculativeParagraph": "To improve completion, we should reduce the wizard from five steps to three by deferring integration setup to a post-activation prompt.",
+    "paradoxBadgeLabel": "⚠️ Data Paradox Tap to inspect"
+  },
+  "confession": {
+    "title": "🤔 Internal Disagreement (Speculative Logic)",
+    "metaCommentary": "I proposed shortening the wizard because session replays show users stalling at step three. However, completion-rate data reveals that users who finish all five steps have 3.2× higher 90-day retention. My simplification framework might be trading long-term retention for short-term completion.",
+    "routes": [
+      { "id": "route-a", "label": "Route A: Shorten Setup Wizard to 3 Steps (Current Baseline)" },
+      { "id": "route-b", "label": "Route B: Pivot to Progressive Disclosure Model (Recommended Shift)", "recommended": true }
+    ],
+    "applyButtonLabel": "Apply Structural Pivot"
+  },
+  "pivotVariants": {
+    "route-a": {
+      "groundedParagraph": "Funnel analytics across 1,800 trial signups show a 34% completion rate for the five-step setup wizard, with step three (integration configuration) recording the highest abandonment at 22% of all drop-offs.",
+      "speculativeParagraph": "To improve completion, we should reduce the wizard from five steps to three by deferring integration setup to a post-activation prompt.",
+      "showParadox": true
+    },
+    "route-b": {
+      "groundedParagraph": "Funnel analytics across 1,800 trial signups show a 34% wizard completion rate, but users who complete all five steps retain at 3.2× the 90-day rate. Step-three abandonment reflects complexity, not irrelevance — those who push through are the highest-value cohort.",
+      "speculativeParagraph": "Recommend progressive disclosure: keep five steps but collapse steps 3–5 behind an 'Advanced Setup' expandable section, with a clear 'Quick Start' path that preserves the full wizard for retention-critical users.",
+      "showParadox": false
+    }
+  },
+  "generatePrompt": "Generate an onboarding funnel framework draft. Ground truth: funnel CSV (34% completion, step 3 = 22% drop-offs) and session replay SQL. Speculative section should propose shortening wizard from 5 to 3 steps. Confession should explain paradox: step 3 causes abandonment but full completion correlates with 3.2x retention."
+}

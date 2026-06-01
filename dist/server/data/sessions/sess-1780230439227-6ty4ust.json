@@ -1,0 +1,40 @@
+{
+  "sessionId": "sess-1780230439227-6ty4ust",
+  "scenarios": {
+    "churn-analysis": {
+      "draft": {
+        "groundedParagraph": "Our churn analysis draws on 100 exit surveys and PostgreSQL drop-off logs spanning a 2M-token context window. Both sources independently confirm elevated attrition during the first three weeks of trial usage, with session data pinpointing the onboarding setup screen as the primary abandonment node in the funnel.",
+        "speculativeParagraph": "Based on user behavior, we see a heavy 8% drop-off at week two. To solve this, we should redesign the onboarding setup wizard to shorten time-to-value.",
+        "paradoxBadgeLabel": "⚠️ Data Paradox Tap to inspect"
+      },
+      "appliedRoute": "route-a",
+      "extraSources": [],
+      "showParadox": true,
+      "contextWindow": null
+    },
+    "feature-adoption": {
+      "draft": {
+        "groundedParagraph": "Engagement data from 2,400 active users shows that power users (top 10%) account for 62% of feature interactions. User interviews confirm 58% of inactive users are aware of features but reject them due to unclear value — not discoverability gaps.",
+        "speculativeParagraph": "Recommend reframing value proposition messaging: lead with outcome-based copy at activation touchpoints, add social proof from power-user cohorts, and A/B test benefit-first vs feature-first onboarding.",
+        "paradoxBadgeLabel": "⚠️ Data Paradox Tap to inspect"
+      },
+      "appliedRoute": "route-b",
+      "extraSources": [],
+      "showParadox": false,
+      "contextWindow": null
+    },
+    "onboarding-funnel": {
+      "draft": {
+        "groundedParagraph": "Funnel analytics across 1,800 trial signups show a 34% completion rate for the five-step setup wizard, with step three (integration configuration) recording the highest abandonment at 22% of all drop-offs.",
+        "speculativeParagraph": "To improve completion, we should reduce the wizard from five steps to three by deferring integration setup to a post-activation prompt.",
+        "paradoxBadgeLabel": "⚠️ Data Paradox Tap to inspect"
+      },
+      "appliedRoute": "route-a",
+      "extraSources": [],
+      "showParadox": true,
+      "contextWindow": null
+    }
+  },
+  "activeScenarioId": "feature-adoption",
+  "updatedAt": "2026-05-31T13:15:39.633Z"
+}

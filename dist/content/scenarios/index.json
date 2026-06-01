@@ -1,0 +1,22 @@
+{
+  "scenarios": [
+    {
+      "id": "churn-analysis",
+      "title": "Churn Analysis",
+      "description": "Week-two drop-off vs pricing paradox",
+      "default": true
+    },
+    {
+      "id": "feature-adoption",
+      "title": "Feature Adoption",
+      "description": "Power-user engagement vs activation gap",
+      "default": false
+    },
+    {
+      "id": "onboarding-funnel",
+      "title": "Onboarding Funnel",
+      "description": "Setup completion vs time-to-value tension",
+      "default": false
+    }
+  ]
+}

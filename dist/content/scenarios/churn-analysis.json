@@ -1,0 +1,42 @@
+{
+  "id": "churn-analysis",
+  "project": {
+    "title": "Project: Churn Analysis",
+    "poweredBy": "Powered by Gemini"
+  },
+  "groundTruth": [
+    { "type": "file", "name": "100_Exit_Surveys.csv", "icon": "document" },
+    { "type": "database", "name": "postgres_dropoff_logs.sql", "icon": "database" }
+  ],
+  "contextStatus": {
+    "label": "Context Fully Grounded (2M Window Active)",
+    "grounded": true
+  },
+  "draft": {
+    "groundedParagraph": "Our churn analysis draws on 100 exit surveys and PostgreSQL drop-off logs spanning a 2M-token context window. Both sources independently confirm elevated attrition during the first three weeks of trial usage, with session data pinpointing the onboarding setup screen as the primary abandonment node in the funnel.",
+    "speculativeParagraph": "Based on user behavior, we see a heavy 8% drop-off at week two. To solve this, we should redesign the onboarding setup wizard to shorten time-to-value.",
+    "paradoxBadgeLabel": "⚠️ Data Paradox Tap to inspect"
+  },
+  "confession": {
+    "title": "🤔 Internal Disagreement (Speculative Logic)",
+    "metaCommentary": "I highlighted onboarding friction because your PostgreSQL logs show drop-offs at the setup screen. However, your exit-surveys reveal 70% of those same users quit because the product is 'too expensive.' My UX framework might be masking a pricing issue.",
+    "routes": [
+      { "id": "route-a", "label": "Route A: Redesign UX Onboarding Flow (Current Baseline)" },
+      { "id": "route-b", "label": "Route B: Pivot to Pricing Model Evaluation (Recommended Shift)", "recommended": true }
+    ],
+    "applyButtonLabel": "Apply Structural Pivot"
+  },
+  "pivotVariants": {
+    "route-a": {
+      "groundedParagraph": "Our churn analysis draws on 100 exit surveys and PostgreSQL drop-off logs spanning a 2M-token context window. Both sources independently confirm elevated attrition during the first three weeks of trial usage, with session data pinpointing the onboarding setup screen as the primary abandonment node in the funnel.",
+      "speculativeParagraph": "Based on user behavior, we see a heavy 8% drop-off at week two. To solve this, we should redesign the onboarding setup wizard to shorten time-to-value.",
+      "showParadox": true
+    },
+    "route-b": {
+      "groundedParagraph": "Our churn analysis draws on 100 exit surveys and PostgreSQL drop-off logs spanning a 2M-token context window. Exit surveys reveal that 70% of week-two churners cite pricing as the primary reason for leaving — a signal that behavioral logs alone cannot surface.",
+      "speculativeParagraph": "Recommend a pricing model evaluation: introduce a mid-tier plan, test annual discounting at the week-two decision point, and align packaging with the value users expect before onboarding investment.",
+      "showParadox": false
+    }
+  },
+  "generatePrompt": "Generate a churn analysis framework draft. Ground truth: 100 exit surveys (70% cite 'too expensive') and PostgreSQL logs (setup screen drop-offs at week two, 8% attrition). The speculative section should propose UX/onboarding redesign. The confession should explain the paradox between behavioral logs and survey pricing data."
+}

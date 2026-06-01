@@ -1,0 +1,1191 @@
+/* Socratic Editor — bundled CSS (v9 build) */
+/**
+ * Design tokens — Google Gemini Mobile App Replica
+ * True black dark theme with Google Blue accent
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap');
+
+:root {
+  /* ─── Core Surfaces (Material You Dark) ─── */
+  --g-bg: #000000;
+  --g-surface: #1e1f20;
+  --g-surface-container: #282a2c;
+  --g-surface-container-high: #333537;
+  --g-surface-container-highest: #3c3e41;
+  --g-surface-dim: #131314;
+  --g-surface-bright: #3c3e41;
+  --g-on-surface: #e3e3e3;
+  --g-on-surface-variant: #c4c7c5;
+  --g-outline: #444746;
+  --g-outline-variant: #313332;
+
+  /* ─── Text ─── */
+  --g-text-primary: #e3e3e3;
+  --g-text-secondary: #9aa0a6;
+  --g-text-tertiary: #6e7479;
+  --g-text-on-primary: #062e6f;
+  --g-text-heading: #ffffff;
+
+  /* ─── Accent — Google Blue ─── */
+  --g-primary: #8ab4f8;
+  --g-primary-dim: #4285f4;
+  --g-primary-container: #004a77;
+  --g-on-primary-container: #d3e3fd;
+  --g-secondary: #a8c7fa;
+  --g-tertiary: #c58af9;
+
+  /* ─── Gemini Gradient ─── */
+  --g-gemini-gradient: linear-gradient(135deg, #4285f4, #8ab4f8, #c58af9);
+  --g-gemini-star: #8ab4f8;
+
+  /* ─── Error / Warning ─── */
+  --g-error: #f28b82;
+  --g-error-container: #8c1d18;
+  --g-warning: #fdd663;
+  --g-warning-container: rgba(253, 214, 99, 0.08);
+  --g-warning-border: rgba(253, 214, 99, 0.20);
+
+  /* ─── Success ─── */
+  --g-success: #81c995;
+  --g-success-container: rgba(129, 201, 149, 0.08);
+  --g-success-border: rgba(129, 201, 149, 0.20);
+
+  /* ─── Typography ─── */
+  --g-font: 'Google Sans', 'Google Sans Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --g-font-display: 1.5rem;
+  --g-font-headline: 1.125rem;
+  --g-font-title: 1rem;
+  --g-font-body: 0.875rem;
+  --g-font-label: 0.75rem;
+  --g-font-caption: 0.6875rem;
+
+  /* ─── Radius (Material You) ─── */
+  --g-radius-xs: 8px;
+  --g-radius-sm: 12px;
+  --g-radius-md: 16px;
+  --g-radius-lg: 20px;
+  --g-radius-xl: 28px;
+  --g-radius-full: 9999px;
+
+  /* ─── Motion ─── */
+  --g-motion-standard: 300ms cubic-bezier(0.2, 0, 0, 1);
+  --g-motion-emphasized: 500ms cubic-bezier(0.2, 0, 0, 1);
+  --g-motion-spring: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ─── Elevation (dark surfaces glow) ─── */
+  --g-shadow-1: 0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.4);
+  --g-shadow-2: 0 2px 6px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4);
+  --g-shadow-3: 0 4px 12px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4);
+}
+
+/* ══════════════════════════════════════════
+   Global Reset
+   ══════════════════════════════════════════ */
+
+* {
+  font-family: var(--g-font);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #000;
+  color: var(--g-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+}
+
+ul { list-style: none; }
+
+/* ══════════════════════════════════════════
+   Semantic Classes — Gemini Style
+   ══════════════════════════════════════════ */
+
+/* Screen Title */
+.ds-screen-title {
+  font-size: var(--g-font-headline);
+  font-weight: 500;
+  color: var(--g-text-heading);
+  letter-spacing: 0;
+}
+
+/* Sub label */
+.ds-sub-label {
+  font-size: var(--g-font-caption);
+  color: var(--g-text-secondary);
+  font-weight: 400;
+}
+
+/* Body text */
+.ds-body-grounded,
+.ds-body-speculative {
+  font-size: var(--g-font-body);
+  color: var(--g-on-surface-variant);
+  line-height: 1.65;
+}
+
+/* Editable grounded paragraph */
+.ds-body-grounded--editable {
+  outline: none;
+  border-radius: var(--g-radius-xs);
+  padding: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.ds-body-grounded--editable:focus {
+  background-color: var(--g-surface-container);
+  box-shadow: 0 0 0 2px var(--g-primary);
+}
+
+.ds-body-grounded--editing {
+  background-color: var(--g-surface-container);
+}
+
+/* Paradox badge — amber/warning */
+.ds-paradox-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: var(--g-radius-full);
+  font-size: var(--g-font-label);
+  font-weight: 500;
+  color: var(--g-warning);
+  background: var(--g-warning-container);
+  border: 1px solid var(--g-warning-border);
+  cursor: pointer;
+  transition: all var(--g-motion-standard);
+}
+
+.ds-paradox-badge:hover {
+  background: rgba(253, 214, 99, 0.12);
+}
+
+.ds-paradox-badge:active {
+  transform: scale(0.97);
+}
+
+/* Speculative block */
+.ds-speculative-block {
+  border-radius: var(--g-radius-sm);
+  border: 1px dashed var(--g-warning-border);
+  background: var(--g-warning-container);
+  padding: 16px;
+}
+
+.ds-speculative-resolved {
+  border-radius: var(--g-radius-sm);
+  border: 1px solid var(--g-outline-variant);
+  background: var(--g-surface);
+  padding: 16px;
+}
+
+/* CTA Primary */
+.ds-cta-primary {
+  width: 100%;
+  min-height: 48px;
+  border-radius: var(--g-radius-full);
+  background: var(--g-primary);
+  color: var(--g-text-on-primary);
+  font-size: var(--g-font-body);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all var(--g-motion-standard);
+}
+
+.ds-cta-primary:hover {
+  background: var(--g-secondary);
+  box-shadow: var(--g-shadow-2);
+}
+
+.ds-cta-primary:active {
+  transform: scale(0.98);
+}
+
+.ds-cta-primary:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Success badge */
+.ds-success-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--g-radius-full);
+  font-size: var(--g-font-label);
+  font-weight: 500;
+  color: var(--g-success);
+  background: var(--g-success-container);
+  border: 1px solid var(--g-success-border);
+}
+
+/* Card */
+.ds-card {
+  border-radius: var(--g-radius-md);
+  background: var(--g-surface);
+  padding: 16px;
+  box-shadow: none;
+  border: none;
+}
+
+/* Sheet title */
+.ds-sheet-title {
+  font-size: var(--g-font-title);
+  font-weight: 500;
+  color: var(--g-text-heading);
+}
+
+/* ══════════════════════════════════════════
+   Styles — Google Gemini Mobile App Replica
+   ══════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ══════════════════════════════════════════
+   Device Shell
+   ══════════════════════════════════════════ */
+.device-shell {
+  background: var(--g-bg);
+  border: 1px solid var(--g-outline-variant);
+  position: relative;
+}
+
+/* ══════════════════════════════════════════
+   Screen Transitions
+   ══════════════════════════════════════════ */
+.screen {
+  transition: opacity 200ms ease;
+}
+
+.screen-hidden {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.screen-visible {
+  opacity: 1;
+  pointer-events: auto;
+  position: relative;
+}
+
+/* ══════════════════════════════════════════
+   Header — Gemini Style
+   ══════════════════════════════════════════ */
+.gemini-header {
+  padding: 48px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gemini-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gemini-logo-text {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--g-text-heading);
+  letter-spacing: -0.2px;
+}
+
+.gemini-star {
+  width: 20px;
+  height: 20px;
+  background: var(--g-gemini-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--g-radius-full);
+  color: var(--g-text-secondary);
+  transition: background var(--g-motion-standard);
+}
+
+.btn-icon:hover {
+  background: var(--g-surface-container);
+}
+
+.btn-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ══════════════════════════════════════════
+   Greeting — "Hello, User"
+   ══════════════════════════════════════════ */
+.gemini-greeting {
+  padding: 24px 20px 8px;
+}
+
+.greeting-text {
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--g-text-heading);
+  line-height: 1.3;
+}
+
+.greeting-sub {
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--g-text-tertiary);
+  line-height: 1.3;
+}
+
+/* ══════════════════════════════════════════
+   Main Content Area
+   ══════════════════════════════════════════ */
+.screen-main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 100px;
+}
+
+.screen-main::-webkit-scrollbar {
+  width: 0;
+}
+
+/* ══════════════════════════════════════════
+   Source Card — Ground Truth
+   ══════════════════════════════════════════ */
+.ground-truth-card {
+  margin: 16px 16px 0;
+  padding: 16px;
+  background: var(--g-surface);
+  border-radius: var(--g-radius-md);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: var(--g-font-body);
+  font-weight: 500;
+  color: var(--g-text-primary);
+}
+
+.card-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+/* Source items */
+.source-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: var(--g-radius-xs);
+  transition: background 0.15s ease;
+}
+
+.source-item:hover {
+  background: var(--g-surface-container);
+}
+
+.source-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--g-radius-xs);
+  background: var(--g-surface-container);
+  color: var(--g-primary);
+  flex-shrink: 0;
+}
+
+.source-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.source-name {
+  font-size: var(--g-font-body);
+  color: var(--g-on-surface-variant);
+  font-weight: 400;
+}
+
+/* ══════════════════════════════════════════
+   Chips — Gemini Capability Pills
+   ══════════════════════════════════════════ */
+.chips-container {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--g-radius-full);
+  background: var(--g-surface);
+  color: var(--g-on-surface-variant);
+  font-size: var(--g-font-body);
+  font-weight: 400;
+  min-height: 44px;
+  transition: background var(--g-motion-standard);
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.chip:hover {
+  background: var(--g-surface-container);
+}
+
+.chip-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--g-primary);
+  flex-shrink: 0;
+}
+
+.chip-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ══════════════════════════════════════════
+   Prompt Bar — Bottom Input
+   ══════════════════════════════════════════ */
+.prompt-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px 16px;
+  background: var(--g-bg);
+}
+
+.prompt-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 20px;
+  border-radius: var(--g-radius-xl);
+  background: var(--g-surface);
+  min-height: 52px;
+}
+
+.prompt-btn {
+  width: 100%;
+  min-height: 48px;
+  border-radius: var(--g-radius-xl);
+  background: var(--g-surface);
+  color: var(--g-on-surface-variant);
+  font-size: var(--g-font-body);
+  font-weight: 400;
+  text-align: left;
+  padding: 0 20px;
+  transition: background var(--g-motion-standard);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prompt-btn:hover {
+  background: var(--g-surface-container);
+}
+
+.prompt-send {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--g-radius-full);
+  background: var(--g-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.prompt-send svg {
+  width: 18px;
+  height: 18px;
+  color: var(--g-text-on-primary);
+}
+
+/* ══════════════════════════════════════════
+   Ghost Button
+   ══════════════════════════════════════════ */
+.btn-ghost {
+  font-size: var(--g-font-caption);
+  color: var(--g-primary);
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  min-height: 36px;
+  border-radius: var(--g-radius-full);
+  transition: background 0.15s ease;
+}
+
+.btn-ghost:hover {
+  background: rgba(138, 180, 248, 0.08);
+}
+
+/* ══════════════════════════════════════════
+   Context Badge
+   ══════════════════════════════════════════ */
+.context-badge {
+  margin: 12px 16px 0;
+}
+
+/* ══════════════════════════════════════════
+   Status Text
+   ══════════════════════════════════════════ */
+.status-text {
+  font-size: var(--g-font-caption);
+  color: var(--g-text-secondary);
+  padding: 4px 16px;
+}
+
+.pii-text {
+  font-size: var(--g-font-caption);
+  color: var(--g-warning);
+  padding: 4px 16px;
+}
+
+/* ══════════════════════════════════════════
+   Screen 2 — Draft Header
+   ══════════════════════════════════════════ */
+.draft-header {
+  padding: 48px 12px 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid var(--g-outline-variant);
+}
+
+.draft-title-group {
+  flex: 1;
+}
+
+.draft-subtitle {
+  font-size: var(--g-font-caption);
+  color: var(--g-text-tertiary);
+  margin-top: 2px;
+}
+
+/* ══════════════════════════════════════════
+   Draft Content
+   ══════════════════════════════════════════ */
+.draft-content {
+  padding: 16px;
+}
+
+.section-label {
+  font-size: var(--g-font-caption);
+  font-weight: 500;
+  color: var(--g-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-label-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--g-primary);
+}
+
+.section-label-dot--warning {
+  background: var(--g-warning);
+}
+
+.draft-card {
+  padding: 16px;
+  background: var(--g-surface);
+  border-radius: var(--g-radius-md);
+  margin-bottom: 16px;
+}
+
+/* ══════════════════════════════════════════
+   Streaming Indicator
+   ══════════════════════════════════════════ */
+.streaming-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin: 0 16px 12px;
+  border-radius: var(--g-radius-sm);
+  background: var(--g-surface);
+}
+
+.streaming-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.streaming-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--g-primary);
+  animation: gemini-pulse 1.4s ease-in-out infinite both;
+}
+
+.streaming-dots span:nth-child(1) { animation-delay: -0.32s; }
+.streaming-dots span:nth-child(2) { animation-delay: -0.16s; }
+.streaming-dots span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes gemini-pulse {
+  0%, 80%, 100% { transform: scale(0.5); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.streaming-text {
+  font-size: var(--g-font-label);
+  color: var(--g-primary);
+  font-weight: 500;
+}
+
+.stream-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--g-primary);
+  animation: cursor-blink 1s step-end infinite;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-radius: 1px;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ══════════════════════════════════════════
+   Edit Hint
+   ══════════════════════════════════════════ */
+.edit-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--g-font-caption);
+  color: var(--g-text-tertiary);
+  padding: 6px 12px;
+  border-radius: var(--g-radius-full);
+  background: var(--g-surface);
+  margin-bottom: 12px;
+}
+
+/* ══════════════════════════════════════════
+   Paradox Section
+   ══════════════════════════════════════════ */
+.paradox-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ══════════════════════════════════════════
+   Progress Tracker — Gemini Step Dots
+   ══════════════════════════════════════════ */
+.progress-tracker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 48px;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--g-outline);
+  transition: all var(--g-motion-standard);
+}
+
+.progress-dot--active {
+  background: var(--g-primary);
+  transform: scale(1.25);
+  box-shadow: 0 0 8px rgba(138, 180, 248, 0.4);
+}
+
+.progress-dot--complete {
+  background: var(--g-success);
+}
+
+.progress-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--g-text-tertiary);
+}
+
+.progress-label--active {
+  color: var(--g-primary);
+}
+
+.progress-label--complete {
+  color: var(--g-success);
+}
+
+.progress-connector {
+  width: 24px;
+  height: 2px;
+  background: var(--g-outline-variant);
+  border-radius: 1px;
+  margin-bottom: 16px;
+}
+
+.progress-connector--active {
+  background: var(--g-primary);
+}
+
+/* ══════════════════════════════════════════
+   Footer
+   ══════════════════════════════════════════ */
+.screen-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px 16px;
+  background: var(--g-bg);
+  border-top: 1px solid var(--g-outline-variant);
+}
+
+.draft-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: var(--g-bg);
+  border-top: 1px solid var(--g-outline-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ══════════════════════════════════════════
+   Bottom Sheet — Gemini Style
+   ══════════════════════════════════════════ */
+.sheet-backdrop {
+  transition: opacity 300ms ease;
+}
+
+.sheet-backdrop-closed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sheet-backdrop-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sheet-panel {
+  transition: transform 400ms cubic-bezier(0.2, 0, 0, 1);
+  background: var(--g-surface-dim);
+  border-top: 1px solid var(--g-outline-variant);
+}
+
+.sheet-panel-closed { transform: translateY(100%); }
+.sheet-panel-opening { transform: translateY(100%); }
+.sheet-panel-open { transform: translateY(0); }
+.sheet-panel-closing { transform: translateY(100%); }
+
+.sheet-handle {
+  width: 32px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--g-outline);
+  cursor: pointer;
+  border: none;
+}
+
+/* Route options */
+.route-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 8px;
+  border-radius: var(--g-radius-xs);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  min-height: 44px;
+}
+
+.route-option:hover {
+  background: var(--g-surface-container);
+}
+
+.route-radio {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--g-primary);
+}
+
+.route-label {
+  font-size: var(--g-font-body);
+  color: var(--g-on-surface-variant);
+  line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════
+   Project Switcher — Gemini Style
+   ══════════════════════════════════════════ */
+.switcher-backdrop {
+  transition: opacity 300ms ease;
+}
+
+.switcher-backdrop-closed { opacity: 0; pointer-events: none; }
+.switcher-backdrop-open { opacity: 1; pointer-events: auto; }
+
+.switcher-panel {
+  transition: transform 400ms cubic-bezier(0.2, 0, 0, 1);
+  background: var(--g-surface-dim);
+  border-bottom: 1px solid var(--g-outline-variant);
+}
+
+.switcher-panel-closed { transform: translateY(-100%); }
+.switcher-panel-open { transform: translateY(0); }
+
+.switcher-item {
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: var(--g-radius-sm);
+  background: var(--g-surface);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  min-height: 44px;
+  border: none;
+}
+
+.switcher-item:hover {
+  background: var(--g-surface-container);
+}
+
+.switcher-item--active {
+  background: var(--g-primary-container) !important;
+}
+
+.switcher-item-title {
+  font-size: var(--g-font-body);
+  font-weight: 500;
+  color: var(--g-text-primary);
+}
+
+.switcher-item-desc {
+  display: block;
+  font-size: var(--g-font-label);
+  color: var(--g-text-secondary);
+  margin-top: 2px;
+}
+
+/* ══════════════════════════════════════════
+   Audit History — Gemini Style
+   ══════════════════════════════════════════ */
+.audit-panel-backdrop {
+  transition: opacity 300ms ease;
+}
+
+.audit-panel-backdrop-closed { opacity: 0; pointer-events: none; }
+.audit-panel-backdrop-open { opacity: 1; pointer-events: auto; }
+
+.audit-panel {
+  transition: opacity 200ms ease, transform 200ms ease;
+  background: var(--g-surface-dim);
+  border: 1px solid var(--g-outline-variant);
+}
+
+.audit-panel-closed {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.96);
+}
+
+.audit-panel-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+.audit-entry {
+  padding: 12px 16px;
+  border-radius: var(--g-radius-xs);
+  background: var(--g-surface);
+  margin-bottom: 8px;
+}
+
+.audit-entry-label {
+  font-size: var(--g-font-body);
+  font-weight: 500;
+  color: var(--g-text-primary);
+}
+
+.audit-entry-time {
+  font-size: var(--g-font-caption);
+  color: var(--g-text-tertiary);
+  margin-top: 2px;
+}
+
+.audit-entry-detail {
+  font-size: var(--g-font-label);
+  color: var(--g-text-secondary);
+  margin-top: 4px;
+}
+
+/* ══════════════════════════════════════════
+   Toast — Gemini Style
+   ══════════════════════════════════════════ */
+.toast {
+  position: absolute;
+  bottom: 80px;
+  left: 16px;
+  right: 16px;
+  margin: 0 auto;
+  max-width: 320px;
+  border-radius: var(--g-radius-xs);
+  background: var(--g-surface-container-highest);
+  color: var(--g-text-primary);
+  font-size: var(--g-font-label);
+  font-weight: 500;
+  text-align: center;
+  padding: 12px 16px;
+  z-index: 50;
+  box-shadow: var(--g-shadow-3);
+  animation: toast-in 200ms ease;
+}
+
+/* Card Flash Highlight Nudge */
+.card-flash-highlight {
+  animation: card-flash 800ms ease-out;
+}
+
+@keyframes card-flash {
+  0% {
+    background: rgba(138, 180, 248, 0.25);
+  }
+  100% {
+    background: var(--g-surface);
+  }
+}
+
+.speculative-flash-highlight {
+  animation: spec-flash 800ms ease-out;
+}
+
+@keyframes spec-flash {
+  0% {
+    background: rgba(253, 214, 99, 0.25);
+  }
+  100% {
+    background: var(--g-warning-container);
+  }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════
+   Pivot Applied
+   ══════════════════════════════════════════ */
+.pivot-applied-animate {
+  animation: pivot-in 250ms ease;
+}
+
+@keyframes pivot-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════
+   Powered Badge
+   ══════════════════════════════════════════ */
+.powered-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--g-text-tertiary);
+  font-weight: 400;
+}
+
+.powered-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--g-success);
+  animation: dot-pulse 2s infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ══════════════════════════════════════════
+   Utilities
+   ══════════════════════════════════════════ */
+.hidden { display: none !important; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ══════════════════════════════════════════
+   Custom Premium Tooltips & Nudges
+   ══════════════════════════════════════════ */
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -36px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  background: var(--g-surface-container-highest);
+  color: var(--g-text-primary);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease, transform 150ms ease;
+  z-index: 100;
+  box-shadow: var(--g-shadow-2);
+  border: 1px solid var(--g-outline);
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Nudge Pulse for Paradox Badge */
+.paradox-badge-pulse {
+  animation: paradox-nudge-pulse 2s infinite ease-in-out;
+}
+
+@keyframes paradox-nudge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(253, 214, 99, 0.35);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 8px rgba(253, 214, 99, 0);
+  }
+}
+
+/* Onboarding Hint Bubble */
+.first-time-hint-bubble {
+  position: absolute;
+  top: 36px;
+  left: 24px;
+  background: var(--g-primary-dim);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+  z-index: 100;
+  animation: hint-bounce 1.5s infinite ease-in-out;
+}
+
+.first-time-hint-bubble::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 16px;
+  border-width: 0 6px 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent var(--g-primary-dim) transparent;
+}
+
+@keyframes hint-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+

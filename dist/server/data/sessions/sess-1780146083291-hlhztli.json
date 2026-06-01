@@ -1,0 +1,40 @@
+{
+  "sessionId": "sess-1780146083291-hlhztli",
+  "scenarios": {
+    "churn-analysis": {
+      "draft": {
+        "groundedParagraph": "Our churn analysis draws on 100 exit surveys and PostgreSQL drop-off logs spanning a 2M-token context window. Exit surveys reveal that 70% of week-two churners cite pricing as the primary reason for leaving — a signal that behavioral logs alone cannot surface.",
+        "speculativeParagraph": "Recommend a pricing model evaluation: introduce a mid-tier plan, test annual discounting at the week-two decision point, and align packaging with the value users expect before onboarding investment.",
+        "paradoxBadgeLabel": "⚠️ Data Paradox Tap to inspect"
+      },
+      "appliedRoute": "route-b",
+      "extraSources": [],
+      "showParadox": false,
+      "contextWindow": null
+    },
+    "feature-adoption": {
+      "draft": {
+        "groundedParagraph": "Engagement data from 2,400 active users shows that power users (top 10%) account for 62% of feature interactions, while 45% of new signups never activate the core workflow within their first 14 days.",
+        "speculativeParagraph": "To close the activation gap, we should add a guided feature tour and gamified onboarding badges to drive discovery of advanced capabilities.",
+        "paradoxBadgeLabel": "⚠️ Data Paradox Tap to inspect"
+      },
+      "appliedRoute": null,
+      "extraSources": [],
+      "showParadox": true,
+      "contextWindow": null
+    },
+    "onboarding-funnel": {
+      "draft": {
+        "groundedParagraph": "Funnel analytics across 1,800 trial signups show a 34% completion rate for the five-step setup wizard, with step three (integration configuration) recording the highest abandonment at 22% of all drop-offs.",
+        "speculativeParagraph": "To improve completion, we should reduce the wizard from five steps to three by deferring integration setup to a post-activation prompt.",
+        "paradoxBadgeLabel": "⚠️ Data Paradox Tap to inspect"
+      },
+      "appliedRoute": null,
+      "extraSources": [],
+      "showParadox": true,
+      "contextWindow": null
+    }
+  },
+  "activeScenarioId": "onboarding-funnel",
+  "updatedAt": "2026-05-30T13:08:15.886Z"
+}

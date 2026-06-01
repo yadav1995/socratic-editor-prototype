@@ -1,0 +1,11 @@
+user_id,exit_reason,week_churned,session_count
+u001,too expensive,2,3
+u002,setup too confusing,2,5
+u003,too expensive,2,2
+u004,too expensive,2,4
+u005,not enough features,3,8
+u006,too expensive,2,1
+u007,setup too confusing,2,6
+u008,too expensive,2,3
+u009,too expensive,2,2
+u010,too expensive,2,4

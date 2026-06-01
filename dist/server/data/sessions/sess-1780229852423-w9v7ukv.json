@@ -1,0 +1,84 @@
+{
+  "sessionId": "sess-1780229852423-w9v7ukv",
+  "scenarios": {
+    "churn-analysis": {
+      "draft": {
+        "groundedParagraph": "The analysis of the 100 exit surveys and PostgreSQL logs reveals a significant trend in customer churn. The surveys indicate that 70% of customers cite 'too expensive' as the primary reason for leaving, suggesting that pricing is a major concern. Meanwhile, the PostgreSQL logs show a notable drop-off rate at the setup screen during week two, with an overall attrition rate of 8%. This data provides a clear picture of the customer journey and highlights the need to address pricing and onboarding issues to reduce churn.",
+        "speculativeParagraph": "To mitigate churn, a potential solution could be to redesign the onboarding process and offer more flexible pricing plans. By streamlining the setup process and providing clearer instructions, customers may be less likely to drop off during the initial stages. Additionally, offering tiered pricing or discounts for long-term commitments could help to alleviate concerns about cost. A more intuitive and user-friendly interface could also improve the overall customer experience, increasing the likelihood of retention. By addressing these issues, it's possible to reduce churn and increase customer satisfaction, ultimately leading to revenue growth and a competitive advantage.",
+        "paradoxBadgeLabel": "⚠️ Data Paradox Tap to inspect"
+      },
+      "appliedRoute": null,
+      "extraSources": [
+        {
+          "type": "file",
+          "name": "100_Exit_Surveys.csv",
+          "icon": "document",
+          "redactions": []
+        },
+        {
+          "type": "database",
+          "name": "postgres_dropoff_logs.sql",
+          "icon": "database",
+          "redactions": []
+        },
+        {
+          "type": "file",
+          "name": "100_Exit_Surveys.csv",
+          "icon": "document",
+          "redactions": []
+        },
+        {
+          "type": "database",
+          "name": "postgres_dropoff_logs.sql",
+          "icon": "database",
+          "redactions": []
+        },
+        {
+          "type": "file",
+          "name": "100_Exit_Surveys.csv",
+          "icon": "document",
+          "redactions": []
+        },
+        {
+          "type": "database",
+          "name": "postgres_dropoff_logs.sql",
+          "icon": "database",
+          "redactions": []
+        },
+        {
+          "type": "database",
+          "name": "postgres_dropoff_logs.sql",
+          "icon": "database"
+        },
+        {
+          "type": "database",
+          "name": "postgres_dropoff_logs.sql",
+          "icon": "database"
+        }
+      ],
+      "showParadox": true,
+      "contextWindow": {
+        "maxTokens": 2000000,
+        "usedTokens": 152,
+        "remainingTokens": 1999848,
+        "utilizationPct": 0.01,
+        "active": true,
+        "label": "Context Fully Grounded (2M Window Active · 0.01% used)",
+        "breakdown": [
+          {
+            "name": "100_Exit_Surveys.csv",
+            "chars": 306,
+            "tokens": 77
+          },
+          {
+            "name": "postgres_dropoff_logs.sql",
+            "chars": 298,
+            "tokens": 75
+          }
+        ]
+      }
+    }
+  },
+  "activeScenarioId": "churn-analysis",
+  "updatedAt": "2026-05-31T12:24:12.335Z"
+}
