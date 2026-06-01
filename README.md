@@ -10,6 +10,30 @@ node server/server.js
 
 Open [http://localhost:3000](http://localhost:3000)
 
+## Streamlit Version (Python)
+
+We have also built a **Python Streamlit version** (`streamlit_app.py`) of the Socratic Editor in this repository, which reads the exact same JSON scenario files and models the end-to-end UX workflow (PII Redaction, Ingestion, Paradox Alert, Socratic Confession, and Pivoting).
+
+### Run Streamlit Locally
+
+1. Install Streamlit:
+   ```bash
+   pip install streamlit
+   ```
+2. Run the app:
+   ```bash
+   streamlit run streamlit_app.py
+   ```
+
+### Deploy to Streamlit Cloud (Free)
+
+This project can be deployed instantly for free on **Streamlit Community Cloud**:
+1. Log in to [Streamlit Community Cloud](https://share.streamlit.io/) using your GitHub account.
+2. Click **New App**.
+3. Select this repository: `yadav1995/socratic-editor-prototype`, branch: `main`, and main file path: `streamlit_app.py`.
+4. Click **Deploy**!
+
+
 ### Optional: Gemini live streaming
 
 ```bash
