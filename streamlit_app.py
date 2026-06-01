@@ -26,25 +26,68 @@ st.markdown("""
         visibility: hidden !important;
     }
     
-    /* Center and style the HTML container to look exactly like a mobile shell on desktop */
+    /* Center and style the HTML container to look exactly like an iPhone 15 Pro (iOS 17 Pro) on desktop */
     @media (min-width: 500px) {
         [data-testid="stHtml"] {
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
             background-color: #000000 !important;
-            margin: 40px auto !important;
-            width: 375px !important;
-            height: 812px !important;
-            border: 12px solid #282a2c !important;
-            border-radius: 40px !important;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9) !important;
+            margin: 20px auto !important;
+            
+            /* iPhone 15 Pro Screen Dimensions */
+            width: 393px !important;
+            height: 852px !important;
+            
+            /* Titanium Phone Bezel & Chamfer Edges */
+            border: 11px solid #1c1c1e !important;
+            border-radius: 50px !important;
+            box-shadow: 
+                0 0 0 2px #3a3a3c, /* Metallic outer edge */
+                0 25px 60px rgba(0, 0, 0, 0.85), /* Premium drop shadow */
+                inset 0 0 4px rgba(255, 255, 255, 0.25) !important; /* Inner glass edge reflection */
+            
+            position: relative !important;
             overflow: hidden !important;
         }
         [data-testid="stHtml"] iframe {
-            width: 375px !important;
-            height: 812px !important;
+            width: 393px !important;
+            height: 852px !important;
             border: none !important;
+            border-radius: 38px !important; /* Screen inner corners */
+            z-index: 1 !important;
+        }
+        
+        /* Dynamic Island containing camera lens */
+        [data-testid="stHtml"]::before {
+            content: "" !important;
+            position: absolute !important;
+            top: 11px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 110px !important;
+            height: 29px !important;
+            /* Black pill shape + camera lens reflection in one gradient */
+            background: radial-gradient(circle at 82px 14px, #0e1e38 3px, #03050a 6px, transparent 7px), #000000 !important;
+            border-radius: 15px !important;
+            z-index: 10 !important;
+            box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.15) !important;
+            pointer-events: none !important;
+        }
+        
+        /* iOS 17 Home Indicator Bar */
+        [data-testid="stHtml"]::after {
+            content: "" !important;
+            position: absolute !important;
+            bottom: 9px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 140px !important;
+            height: 5px !important;
+            background: rgba(255, 255, 255, 0.45) !important;
+            border-radius: 3px !important;
+            z-index: 10 !important;
+            pointer-events: none !important;
         }
     }
     
@@ -287,5 +330,5 @@ def build_inlined_html():
 # Build the html content
 inlined_html = build_inlined_html()
 
-# Display the inlined HTML frame in Streamlit
-components.html(inlined_html, height=788)
+# Display the inlined HTML frame in Streamlit (with extra height to account for the iOS frame)
+components.html(inlined_html, height=880)
