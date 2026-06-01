@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Socratic Editor — AI-powered framework analysis with Gemini">
+  <title>The Socratic Editor</title>
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background:#000; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem;">
+
+  <div
+    id="device-shell"
+    class="device-shell"
+    style="width:375px; height:812px; border-radius:40px; overflow:hidden;"
+    role="application"
+    aria-label="The Socratic Editor mobile prototype"
+  >
+    <div id="app-viewport" style="position:relative; width:100%; height:100%; overflow:hidden; display:flex; flex-direction:column;">
+
+      <!-- ═══════════════════════════════════
+           Screen 1: Ingestion Overview
+           ═══════════════════════════════════ -->
+      <section
+        id="screen-ingestion"
+        class="screen screen-visible"
+        style="display:flex; flex-direction:column; height:100%;"
+        aria-label="Ingestion Overview"
+      >
+        <!-- Gemini Header -->
+        <header class="gemini-header">
+          <div id="logo-trigger" class="gemini-logo tooltip" data-tooltip="Switch Project" title="Switch Project" style="cursor:pointer; position:relative;">
+            <span style="font-size:20px;">✦</span>
+            <span id="project-title" class="gemini-logo-text">Socratic Editor</span>
+            <div id="first-time-hint" class="hidden first-time-hint-bubble">
+              Tap here to switch projects!
+            </div>
+          </div>
+          <div class="header-actions">
+            <button id="btn-audit-history" type="button" class="btn-icon tooltip" data-tooltip="Decision History" aria-label="Decision history">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+            </button>
+            <button id="btn-project-switcher" type="button" class="btn-icon tooltip" data-tooltip="Switch Project" aria-label="Switch project">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Greeting -->
+        <div class="gemini-greeting">
+          <div class="greeting-text">Hello,</div>
+          <div class="greeting-sub">Where should we start?</div>
+          <div class="powered-badge">
+            <span class="powered-dot"></span>
+            <span>Powered by Gemini</span>
+          </div>
+          <span id="gemini-status" class="hidden" style="display:none; margin-top:4px; font-size:11px; color:var(--g-text-tertiary);"></span>
+        </div>
+
+        <main class="screen-main">
+          <!-- Ground Truth Card -->
+          <div class="ground-truth-card">
+            <div class="card-header">
+              <span class="card-title">Linked Ground Truth</span>
+              <div class="card-actions">
+                <label class="btn-ghost" style="cursor:pointer;">
+                  + Add Source
+                  <input id="file-upload" type="file" accept=".csv,.sql,.json" multiple class="sr-only">
+                </label>
+                <button id="btn-verify-sql" type="button" class="btn-ghost">Verify SQL</button>
+                <button id="btn-load-samples" type="button" class="btn-ghost">Load Samples</button>
+              </div>
+            </div>
+            <ul id="ground-truth-list"></ul>
+          </div>
+
+          <p id="context-window-info" class="hidden status-text"></p>
+          <p id="pii-notice" class="hidden pii-text"></p>
+          <p id="ingest-status" class="hidden status-text"></p>
+
+          <div id="context-badge" class="ds-success-badge context-badge">
+            <svg style="width:16px; height:16px; flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <span id="context-badge-label">Context Fully Grounded (2M Window Active)</span>
+          </div>
+        </main>
+
+        <!-- Bottom Prompt Bar -->
+        <div class="prompt-bar">
+          <button id="btn-generate-framework" type="button" class="prompt-btn">
+            <span>Generate Churn Framework →</span>
+            <span class="prompt-send">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════
+           Screen 2: The Honest Draft
+           ═══════════════════════════════════ -->
+      <section
+        id="screen-draft"
+        class="screen screen-hidden"
+        style="display:flex; flex-direction:column; height:100%;"
+        aria-label="Framework Draft"
+        aria-hidden="true"
+      >
+        <header class="draft-header">
+          <button id="btn-back" type="button" class="btn-icon" aria-label="Go back">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          <div class="draft-title-group">
+            <h1 id="draft-title" class="ds-screen-title">Churn Framework Draft</h1>
+            <p class="draft-subtitle">Generated by Gemini</p>
+          </div>
+        </header>
+
+        <main class="screen-main">
+          <div class="draft-content">
+            <!-- Streaming indicator -->
+            <div id="generation-status" class="hidden streaming-indicator" style="margin:0 0 12px;">
+              <div class="streaming-dots"><span></span><span></span><span></span></div>
+              <span class="streaming-text">Generating draft…</span>
+            </div>
+
+            <!-- Edit hint -->
+            <div id="draft-edit-hint" class="hidden edit-hint">
+              <svg style="width:12px; height:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Z" />
+              </svg>
+              <span>Tap grounded text to edit</span>
+            </div>
+
+            <!-- Grounded Section -->
+            <div style="margin-bottom:20px;">
+              <div class="section-label">
+                <span class="section-label-dot"></span>
+                <span>Grounded Analysis</span>
+              </div>
+              <div class="draft-card">
+                <p id="draft-grounded" class="ds-body-grounded"></p>
+                <span id="stream-cursor" class="hidden stream-cursor"></span>
+              </div>
+            </div>
+
+            <!-- Pivot notice -->
+            <p id="pivot-applied-notice" class="hidden" style="font-size:var(--g-font-label); color:var(--g-primary); margin-bottom:12px;"></p>
+
+            <!-- Paradox Section -->
+            <div id="paradox-section" class="paradox-section">
+              <button
+                id="paradox-badge"
+                type="button"
+                class="ds-paradox-badge paradox-badge"
+                aria-haspopup="dialog"
+                aria-controls="sheet-panel"
+              >
+                <svg style="width:16px; height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                </svg>
+                <span>Data Paradox · Tap to inspect</span>
+              </button>
+
+              <div>
+                <div class="section-label">
+                  <span class="section-label-dot section-label-dot--warning"></span>
+                  <span>Speculative Section</span>
+                </div>
+                <div id="speculative-block" class="ds-speculative-block">
+                  <p id="draft-speculative" class="ds-body-speculative"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <div class="draft-footer">
+          <nav id="progress-tracker" class="progress-tracker" aria-label="Document progress"></nav>
+        </div>
+
+        <!-- Socratic Confession Bottom Sheet -->
+        <div
+          id="sheet-backdrop"
+          class="sheet-backdrop sheet-backdrop-closed"
+          style="position:absolute; inset:0; background:rgba(0,0,0,0.6); z-index:10;"
+          aria-hidden="true"
+        ></div>
+
+        <div
+          id="sheet-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="sheet-title"
+          class="sheet-panel sheet-panel-closed"
+          style="position:absolute; left:0; right:0; bottom:0; z-index:20; height:55%; border-radius:20px 20px 0 0; box-shadow:var(--g-shadow-3); display:flex; flex-direction:column;"
+        >
+          <div style="display:flex; justify-content:center; padding:12px 0 8px;">
+            <button id="sheet-drag-handle" type="button" class="sheet-handle" aria-label="Close panel"></button>
+          </div>
+
+          <div style="flex:1; overflow-y:auto; padding:0 20px 20px;">
+            <h2 id="sheet-title" class="ds-sheet-title" style="margin-bottom:4px;"></h2>
+            <p id="paradox-meta" class="hidden" style="font-size:11px; color:var(--g-text-tertiary); margin-bottom:12px;"></p>
+            <p id="confession-text" style="font-size:var(--g-font-body); color:var(--g-on-surface-variant); line-height:1.65; margin-bottom:20px;"></p>
+
+            <fieldset style="border:0; padding:0; margin:0 0 20px;">
+              <legend class="sr-only">Choose structural route</legend>
+              <div id="route-options" style="display:flex; flex-direction:column; gap:4px;"></div>
+            </fieldset>
+
+            <button id="btn-apply-pivot" type="button" class="ds-cta-primary">
+              Apply Structural Pivot
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════
+           Audit History Panel
+           ═══════════════════════════════════ -->
+      <div id="audit-history-backdrop" class="audit-panel-backdrop audit-panel-backdrop-closed" style="position:absolute; inset:0; background:rgba(0,0,0,0.6); z-index:30;"></div>
+      <div
+        id="audit-history-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="audit-history-title"
+        class="audit-panel audit-panel-closed"
+        style="position:absolute; left:16px; right:16px; top:80px; z-index:40; border-radius:var(--g-radius-md); box-shadow:var(--g-shadow-3); max-height:60%; display:flex; flex-direction:column;"
+      >
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--g-outline-variant);">
+          <h2 id="audit-history-title" class="ds-screen-title">Decision History</h2>
+          <button id="audit-history-close" type="button" class="btn-ghost">Close</button>
+        </div>
+        <ul id="audit-history-list" style="flex:1; overflow-y:auto; padding:12px 16px;"></ul>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           Project Switcher Overlay
+           ═══════════════════════════════════ -->
+      <div
+        id="switcher-backdrop"
+        class="switcher-backdrop switcher-backdrop-closed"
+        style="position:absolute; inset:0; background:rgba(0,0,0,0.6); z-index:30;"
+      ></div>
+      <div
+        id="switcher-panel"
+        class="switcher-panel switcher-panel-closed"
+        style="position:absolute; left:0; right:0; top:0; z-index:40; border-radius:0 0 20px 20px; box-shadow:var(--g-shadow-3); max-height:70%; display:flex; flex-direction:column;"
+      >
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:48px 20px 16px; border-bottom:1px solid var(--g-outline-variant);">
+          <h2 style="font-size:var(--g-font-title); font-weight:500; color:var(--g-text-heading);">Switch Project</h2>
+          <button id="switcher-close" type="button" class="btn-ghost">Done</button>
+        </div>
+        <div id="project-list" style="flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+
+    </div>
+
+    <div id="audit-toast" class="hidden toast" role="status"></div>
+  </div>
+
+  <script src="js/design-system.js"></script>
+  <script src="js/interaction-state.js"></script>
+  <script src="js/focus-trap.js"></script>
+  <script src="js/progress-tracker.js"></script>
+  <script src="js/interaction-controller.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/sheet.js"></script>
+  <script src="js/audit-client.js"></script>
+  <script src="js/state-sync.js"></script>
+  <script src="js/scenario-store.js"></script>
+  <script src="js/gemini-client.js"></script>
+  <script src="js/ingestion.js"></script>
+  <script src="js/sample-sources.js"></script>
+  <script src="js/database-connect.js"></script>
+  <script src="js/pivot-engine.js"></script>
+  <script src="js/components/screen-ingestion.js"></script>
+  <script src="js/components/screen-draft.js"></script>
+  <script src="js/components/sheet-confession.js"></script>
+  <script src="js/scenario-renderer.js"></script>
+  <script src="js/project-switcher.js"></script>
+  <script src="js/audit-history.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+Act as a Principal Mobile UX Designer specializing in AI productivity tools.
+
+Generate a clean, modern mobile wireframe prototype (using HTML and Tailwind CSS) that fits inside a centered mobile device viewport shell (iPhone dimensions). The prototype must demonstrate a 3-step interactive screen flow for "The Socratic Editor" mobile app, handling a Churn Analysis scenario.
+
+Screen 1: Ingestion Overview
+- Top Header: Title "Project: Churn Analysis" with a sub-label "Powered by Gemini".
+- Main Content Card: "Linked Ground Truth" displaying a file icon with "100_Exit_Surveys.csv" and a database icon with "postgres_dropoff_logs.sql".
+- Visual Indicator: A green checkmark badge that says "Context Fully Grounded (2M Window Active)".
+- Fixed Bottom Button: Labeled "Generate Churn Framework ->" to proceed to Screen 2.
+
+Screen 2: The Honest Draft
+- Top Header: Back arrow, Title "Churn Framework Draft".
+- Body Text Area: 
+  * Paragraph 1 (Grounded): Rendered in standard, crisp gray text.
+  * Paragraph 2 (The Speculative Leap): Boxed in a subtle amber dashed outline. Inside this block, text reads: "Based on user behavior, we see a heavy 8% drop-off at week two. To solve this, we should redesign the onboarding setup wizard to shorten time-to-value."
+  * Inline Badge: Placed directly above Paragraph 2, a pill badge colored in soft amber text reading "⚠️ Data Paradox Tap to inspect".
+- Bottom Navigation: Minimal progress tracker indicating active document editing.
+
+Screen 3: The Socratic Confession (Bottom Sheet Triggered State)
+- Maintain Screen 2 in the background (dimmed or overlayed).
+- Slide Up Component (Bottom Sheet Layout - occupying bottom 50% of viewport):
+  * Header Indicator: A clean drag handle bar at the top of the sheet.
+  * Sheet Title: "🤔 Internal Disagreement (Speculative Logic)" in deep gray bold text.
+  * Meta-Commentary Paragraph: "I highlighted onboarding friction because your PostgreSQL logs show drop-offs at the setup screen. However, your exit-surveys reveal 70% of those same users quit because the product is 'too expensive.' My UX framework might be masking a pricing issue."
+  * Interactive Control (Human Override): A vertical radio-button group layout:
+    [ ] Route A: Redesign UX Onboarding Flow (Current Baseline)
+    [•] Route B: Pivot to Pricing Model Evaluation (Recommended Shift)
+  * Action Button: Full-width blue or dark gray button labeled "Apply Structural Pivot".
+
+Styling Guidelines:
+- Strict grayscale wireframe palette (whites, grays, off-blacks) with amber/yellow used EXCLUSIVELY to flag the data paradox.
+- Use native Tailwind spacing and rounded borders to make the layout look clean, professional, and presentation-ready. Do not use generic percentage trust charts or gimmicky layout badges.

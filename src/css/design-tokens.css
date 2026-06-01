@@ -1,0 +1,250 @@
+/**
+ * Design tokens — Google Gemini Mobile App Replica
+ * True black dark theme with Google Blue accent
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap');
+
+:root {
+  /* ─── Core Surfaces (Material You Dark) ─── */
+  --g-bg: #000000;
+  --g-surface: #1e1f20;
+  --g-surface-container: #282a2c;
+  --g-surface-container-high: #333537;
+  --g-surface-container-highest: #3c3e41;
+  --g-surface-dim: #131314;
+  --g-surface-bright: #3c3e41;
+  --g-on-surface: #e3e3e3;
+  --g-on-surface-variant: #c4c7c5;
+  --g-outline: #444746;
+  --g-outline-variant: #313332;
+
+  /* ─── Text ─── */
+  --g-text-primary: #e3e3e3;
+  --g-text-secondary: #9aa0a6;
+  --g-text-tertiary: #6e7479;
+  --g-text-on-primary: #062e6f;
+  --g-text-heading: #ffffff;
+
+  /* ─── Accent — Google Blue ─── */
+  --g-primary: #8ab4f8;
+  --g-primary-dim: #4285f4;
+  --g-primary-container: #004a77;
+  --g-on-primary-container: #d3e3fd;
+  --g-secondary: #a8c7fa;
+  --g-tertiary: #c58af9;
+
+  /* ─── Gemini Gradient ─── */
+  --g-gemini-gradient: linear-gradient(135deg, #4285f4, #8ab4f8, #c58af9);
+  --g-gemini-star: #8ab4f8;
+
+  /* ─── Error / Warning ─── */
+  --g-error: #f28b82;
+  --g-error-container: #8c1d18;
+  --g-warning: #fdd663;
+  --g-warning-container: rgba(253, 214, 99, 0.08);
+  --g-warning-border: rgba(253, 214, 99, 0.20);
+
+  /* ─── Success ─── */
+  --g-success: #81c995;
+  --g-success-container: rgba(129, 201, 149, 0.08);
+  --g-success-border: rgba(129, 201, 149, 0.20);
+
+  /* ─── Typography ─── */
+  --g-font: 'Google Sans', 'Google Sans Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --g-font-display: 1.5rem;
+  --g-font-headline: 1.125rem;
+  --g-font-title: 1rem;
+  --g-font-body: 0.875rem;
+  --g-font-label: 0.75rem;
+  --g-font-caption: 0.6875rem;
+
+  /* ─── Radius (Material You) ─── */
+  --g-radius-xs: 8px;
+  --g-radius-sm: 12px;
+  --g-radius-md: 16px;
+  --g-radius-lg: 20px;
+  --g-radius-xl: 28px;
+  --g-radius-full: 9999px;
+
+  /* ─── Motion ─── */
+  --g-motion-standard: 300ms cubic-bezier(0.2, 0, 0, 1);
+  --g-motion-emphasized: 500ms cubic-bezier(0.2, 0, 0, 1);
+  --g-motion-spring: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ─── Elevation (dark surfaces glow) ─── */
+  --g-shadow-1: 0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.4);
+  --g-shadow-2: 0 2px 6px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4);
+  --g-shadow-3: 0 4px 12px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.4);
+}
+
+/* ══════════════════════════════════════════
+   Global Reset
+   ══════════════════════════════════════════ */
+
+* {
+  font-family: var(--g-font);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #000;
+  color: var(--g-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+}
+
+ul { list-style: none; }
+
+/* ══════════════════════════════════════════
+   Semantic Classes — Gemini Style
+   ══════════════════════════════════════════ */
+
+/* Screen Title */
+.ds-screen-title {
+  font-size: var(--g-font-headline);
+  font-weight: 500;
+  color: var(--g-text-heading);
+  letter-spacing: 0;
+}
+
+/* Sub label */
+.ds-sub-label {
+  font-size: var(--g-font-caption);
+  color: var(--g-text-secondary);
+  font-weight: 400;
+}
+
+/* Body text */
+.ds-body-grounded,
+.ds-body-speculative {
+  font-size: var(--g-font-body);
+  color: var(--g-on-surface-variant);
+  line-height: 1.65;
+}
+
+/* Editable grounded paragraph */
+.ds-body-grounded--editable {
+  outline: none;
+  border-radius: var(--g-radius-xs);
+  padding: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.ds-body-grounded--editable:focus {
+  background-color: var(--g-surface-container);
+  box-shadow: 0 0 0 2px var(--g-primary);
+}
+
+.ds-body-grounded--editing {
+  background-color: var(--g-surface-container);
+}
+
+/* Paradox badge — amber/warning */
+.ds-paradox-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: var(--g-radius-full);
+  font-size: var(--g-font-label);
+  font-weight: 500;
+  color: var(--g-warning);
+  background: var(--g-warning-container);
+  border: 1px solid var(--g-warning-border);
+  cursor: pointer;
+  transition: all var(--g-motion-standard);
+}
+
+.ds-paradox-badge:hover {
+  background: rgba(253, 214, 99, 0.12);
+}
+
+.ds-paradox-badge:active {
+  transform: scale(0.97);
+}
+
+/* Speculative block */
+.ds-speculative-block {
+  border-radius: var(--g-radius-sm);
+  border: 1px dashed var(--g-warning-border);
+  background: var(--g-warning-container);
+  padding: 16px;
+}
+
+.ds-speculative-resolved {
+  border-radius: var(--g-radius-sm);
+  border: 1px solid var(--g-outline-variant);
+  background: var(--g-surface);
+  padding: 16px;
+}
+
+/* CTA Primary */
+.ds-cta-primary {
+  width: 100%;
+  min-height: 48px;
+  border-radius: var(--g-radius-full);
+  background: var(--g-primary);
+  color: var(--g-text-on-primary);
+  font-size: var(--g-font-body);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all var(--g-motion-standard);
+}
+
+.ds-cta-primary:hover {
+  background: var(--g-secondary);
+  box-shadow: var(--g-shadow-2);
+}
+
+.ds-cta-primary:active {
+  transform: scale(0.98);
+}
+
+.ds-cta-primary:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Success badge */
+.ds-success-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--g-radius-full);
+  font-size: var(--g-font-label);
+  font-weight: 500;
+  color: var(--g-success);
+  background: var(--g-success-container);
+  border: 1px solid var(--g-success-border);
+}
+
+/* Card */
+.ds-card {
+  border-radius: var(--g-radius-md);
+  background: var(--g-surface);
+  padding: 16px;
+  box-shadow: none;
+  border: none;
+}
+
+/* Sheet title */
+.ds-sheet-title {
+  font-size: var(--g-font-title);
+  font-weight: 500;
+  color: var(--g-text-heading);
+}

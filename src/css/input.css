@@ -1,0 +1,10 @@
+/**
+ * Tailwind entry — Architecture §9 (compiled build optional)
+ * With npm: npx tailwindcss -i ./src/css/input.css -o ./dist/css/app.bundle.css
+ */
+@import './design-tokens.css';
+@import './styles.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

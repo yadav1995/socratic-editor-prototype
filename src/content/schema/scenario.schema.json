@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SocraticEditorScenario",
+  "type": "object",
+  "required": ["id", "project", "groundTruth", "contextStatus", "draft", "confession"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "project": {
+      "type": "object",
+      "required": ["title", "poweredBy"],
+      "properties": {
+        "title": { "type": "string" },
+        "poweredBy": { "type": "string" }
+      }
+    },
+    "groundTruth": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["type", "name", "icon"],
+        "properties": {
+          "type": { "enum": ["file", "database"] },
+          "name": { "type": "string" },
+          "icon": { "enum": ["document", "database"] }
+        }
+      }
+    },
+    "contextStatus": {
+      "type": "object",
+      "required": ["label", "grounded"],
+      "properties": {
+        "label": { "type": "string" },
+        "grounded": { "type": "boolean" }
+      }
+    },
+    "draft": {
+      "type": "object",
+      "required": ["groundedParagraph", "speculativeParagraph", "paradoxBadgeLabel"],
+      "properties": {
+        "groundedParagraph": { "type": "string", "minLength": 20 },
+        "speculativeParagraph": { "type": "string", "minLength": 20 },
+        "paradoxBadgeLabel": { "type": "string" }
+      }
+    },
+    "confession": {
+      "type": "object",
+      "required": ["title", "metaCommentary", "routes", "applyButtonLabel"],
+      "properties": {
+        "title": { "type": "string" },
+        "metaCommentary": { "type": "string", "minLength": 20 },
+        "applyButtonLabel": { "type": "string" },
+        "routes": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["id", "label"],
+            "properties": {
+              "id": { "enum": ["route-a", "route-b"] },
+              "label": { "type": "string" },
+              "recommended": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "pivotVariants": { "type": "object" },
+    "generatePrompt": { "type": "string" }
+  }
+}
