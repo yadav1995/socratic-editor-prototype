@@ -15,6 +15,7 @@ const App = (() => {
     ScreenDraft.showStreaming(true);
     ProgressTracker.setStep('draft');
     Router.goToDraft();
+    if (typeof OnboardingTour !== 'undefined') OnboardingTour.onGenerate();
 
     const btn = document.getElementById('btn-generate-framework');
     if (btn) {
@@ -131,6 +132,7 @@ const App = (() => {
       : "Baseline Reverted: Restored baseline onboarding wizard draft (paradox active).";
     showToast(explanation);
 
+    if (typeof OnboardingTour !== 'undefined') OnboardingTour.onPivotApplied();
     AuditHistory.refresh();
   }
 
@@ -228,6 +230,7 @@ const App = (() => {
       ScreenIngestion.showIngestStatus('Sample sources loaded from Problem Statement');
       if (result.piiRedactions) ScreenIngestion.showPiiNotice(result.piiRedactions);
       AuditClient.logIngestion(id, result.verified?.length || 0, result.piiRedactions || 0);
+      if (typeof OnboardingTour !== 'undefined') OnboardingTour.onAction('load-samples');
     } catch (err) {
       ScreenIngestion.showIngestStatus(`Failed: ${err.message}`);
     }
@@ -252,6 +255,7 @@ const App = (() => {
       ScenarioRenderer.renderAll(scenario, ScenarioStore.getAllSources());
       ScreenIngestion.showIngestStatus(result.grounding?.label || 'SQL verified');
       AuditClient.logIngestion(id, 1, 0);
+      if (typeof OnboardingTour !== 'undefined') OnboardingTour.onAction('verify-sql');
     } catch (err) {
       ScreenIngestion.showIngestStatus(`SQL verify failed: ${err.message}`);
     }
@@ -313,6 +317,7 @@ const App = (() => {
     if (!localStorage.getItem('socratic-editor-visited')) {
       document.getElementById('first-time-hint')?.classList.remove('hidden');
     }
+    if (typeof OnboardingTour !== 'undefined') OnboardingTour.init();
   }
 
   return { init, getState: () => ({ ...state }) };

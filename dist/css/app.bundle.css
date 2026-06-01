@@ -1188,4 +1188,41 @@ ul { list-style: none; }
   50% { transform: translateY(4px); }
 }
 
+/* ══════════════════════════════════════════
+   Onboarding Guided Tour Spotlight & Bubble
+   ══════════════════════════════════════════ */
+.tour-highlight {
+  position: relative !important;
+  z-index: 1005 !important;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.75), 0 0 15px var(--g-primary) !important;
+  pointer-events: auto !important;
+}
+
+.tour-bubble {
+  transition: opacity 150ms ease;
+}
+
+.tour-arrow {
+  position: absolute;
+  width: 0; height: 0;
+  border-style: solid;
+}
+
+.tour-bubble-bottom .tour-arrow {
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 6px 6px 6px;
+  border-color: transparent transparent var(--g-surface-container-highest) transparent;
+}
+
+.tour-bubble-top .tour-arrow {
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0 6px;
+  border-color: var(--g-surface-container-highest) transparent transparent transparent;
+}
+
+
 

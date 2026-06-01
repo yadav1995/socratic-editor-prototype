@@ -265,6 +265,25 @@
         <div id="project-list" style="flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:8px;"></div>
       </div>
 
+      <!-- ═══════════════════════════════════
+           Onboarding Tour Guided Bubble
+           ═══════════════════════════════════ -->
+      <div
+        id="tour-bubble"
+        class="tour-bubble hidden"
+        style="position:absolute; width:260px; z-index:1000; background:var(--g-surface-container-highest); border:1px solid var(--g-primary); border-radius:12px; padding:12px; box-shadow:var(--g-shadow-3);"
+      >
+        <p id="tour-text" style="font-size:11px; line-height:1.4; color:var(--g-text-primary); margin-bottom:8px;"></p>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <button id="tour-skip" type="button" class="btn-ghost" style="padding:0; font-size:10px; color:var(--g-text-tertiary);">Skip Tour</button>
+          <div style="display:flex; gap:6px;">
+            <button id="tour-prev" type="button" class="btn-ghost" style="padding:4px 8px; font-size:10px;">Back</button>
+            <button id="tour-next" type="button" class="ds-cta-primary" style="min-height:24px; padding:4px 10px; font-size:10px; width:auto; border-radius:6px;">Next</button>
+          </div>
+        </div>
+        <div class="tour-arrow"></div>
+      </div>
+
     </div>
 
     <div id="audit-toast" class="hidden toast" role="status"></div>
@@ -291,6 +310,7 @@
   <script src="js/scenario-renderer.js"></script>
   <script src="js/project-switcher.js"></script>
   <script src="js/audit-history.js"></script>
+  <script src="js/onboarding-tour.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

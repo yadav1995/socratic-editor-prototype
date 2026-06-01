@@ -106,6 +106,7 @@ const SheetController = (() => {
     if (panel) FocusTrap.trap(panel);
     ProgressTracker.onSheetOpen();
     applyBtn?.focus();
+    if (typeof OnboardingTour !== 'undefined') OnboardingTour.onSheetOpen();
   }
 
   function close(applied = false) {
