@@ -111,8 +111,16 @@ const OnboardingTour = (() => {
 
       const bubble = document.getElementById('tour-bubble');
       const textEl = document.getElementById('tour-text');
+      const progressEl = document.getElementById('tour-progress');
+      const prevBtn = document.getElementById('tour-prev');
+      const nextBtn = document.getElementById('tour-next');
+
       if (bubble && textEl) {
         textEl.textContent = step.text;
+        if (progressEl) progressEl.textContent = `${index + 1} / ${STEPS.length}`;
+        if (prevBtn) prevBtn.style.display = index === 0 ? 'none' : 'inline-block';
+        if (nextBtn) nextBtn.textContent = index === STEPS.length - 1 ? 'Finish' : 'Next';
+
         bubble.classList.remove('hidden');
         positionBubble(targetEl, step.placement);
       }
