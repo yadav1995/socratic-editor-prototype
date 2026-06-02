@@ -1,0 +1,65 @@
+Socratic Editor — Simple Development Prompts & Use Cases
+=========================================================
+
+Section 1: Initial Roadmap & Core Development Prompts
+------------------------------------------------------
+
+1. Write the plan
+   - Simple Prompt: "Read the project description and write a simple outline showing how the app will be structured."
+   - Simple Use Case: When you have an idea and want to write down a clear plan of how the app will work before writing any code.
+
+2. Build the first piece
+   - Simple Prompt: "Build the main screen and basic layout of the app."
+   - Simple Use Case: When you are ready to start coding and want to get the main screen and basic buttons on the display.
+
+3. Build the main screens
+   - Simple Prompt: "Build the draft screen and the bottom slide-up menu."
+   - Simple Use Case: When you want users to be able to switch pages, view the AI draft, and open the slide-up options.
+
+4. Match the original brief
+   - Simple Prompt: "Add the core features so the app matches the original project requirements."
+   - Simple Use Case: When you want to ensure the app contains all the basic features you originally asked for.
+
+5. Add more features
+   - Simple Prompt: "Add features like AI text generation, file uploading, and saving user progress."
+   - Simple Use Case: When you want the app to actually connect to AI models, let users upload files, and remember their past decisions.
+
+6. Finish the roadmap
+   - Simple Prompt: "Test, polish, and prepare the app for final launch."
+   - Simple Use Case: When the app is almost finished and you want to clean up the design, fix visual bugs, and deploy it online.
+
+7. Check the database file
+   - Simple Prompt: "Check that the database is connected and shows up as verified inside the app."
+   - Simple Use Case: When you want to make sure your database file is linked correctly and the app recognizes it as a trusted data source.
+
+
+Section 2: Streamlit Deployment, UI Polish & Phone Presentation Prompts
+------------------------------------------------------------------------
+
+8. Uploading & Launching Online
+   - Simple Prompt: "Upload my local mobile app code to GitHub and publish it online on Streamlit."
+   - Simple Use Case: Use this when you want to save your work online, back it up, and get a web link to share the app with others.
+
+9. Fixing the Mobile Screen Layout
+   - Simple Prompt: "Make the app adapt and display properly when opened on mobile phones."
+   - Simple Use Case: Use this when the app screen looks cut off, too small, or shows weird scrollbars when opened on a phone browser.
+
+10. Fixing App Crashes & Code Errors
+    - Simple Prompt: "Fix the syntax errors in my streamlit_app.py file."
+    - Simple Use Case: Use this when the app crashes on launch and shows a red error message on the web page instead of loading.
+
+11. Resolving a Frozen/Blank Screen
+    - Simple Prompt: "Fix the blank screen issue so that the app loads properly."
+    - Simple Use Case: Use this when you open your app's web link, but the screen remains completely white and nothing appears.
+
+12. Testing Buttons & Touch Experience
+    - Simple Prompt: "Test the app end-to-end to make sure all buttons work and are easy to tap on mobile."
+    - Simple Use Case: Use this before sharing your app, to double-check that every button performs its action smoothly on a touch screen.
+
+13. Adding a Step-by-Step User Tour
+    - Simple Prompt: "Create a step-by-step guided tour showing new users how to use the app and where to click next."
+    - Simple Use Case: Use this when the app has multiple steps (like uploading data, editing drafts, and checking logs) and you want a simple tutorial to guide new users so they don't get lost.
+
+14. Showing the App in a Phone Frame
+    - Simple Prompt: "Show the app inside a realistic iPhone frame when viewed on desktop computers."
+    - Simple Use Case: Use this when presenting your work on a laptop or desktop, so the viewer immediately sees it is a mobile app prototype.
