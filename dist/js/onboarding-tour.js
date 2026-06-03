@@ -107,6 +107,12 @@ const OnboardingTour = (() => {
       return;
     }
 
+    // Reset container scroll to 0 to prevent shifted viewport layout
+    const viewport = document.getElementById('app-viewport');
+    if (viewport) viewport.scrollTop = 0;
+    const shell = document.getElementById('device-shell');
+    if (shell) shell.scrollTop = 0;
+
     const step = STEPS[index];
     const targetEl = document.getElementById(step.targetId);
 
@@ -128,8 +134,8 @@ const OnboardingTour = (() => {
     }
 
     if (targetEl) {
-      // Smooth scroll target into view
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Smooth scroll target into view safely
+      safeScrollIntoView(targetEl);
 
       targetEl.classList.add('tour-highlight');
       highlightedEl = targetEl;
@@ -270,6 +276,32 @@ const OnboardingTour = (() => {
     if (!active || currentStepIndex === -1 || !highlightedEl) return;
     const step = STEPS[currentStepIndex];
     positionBubble(highlightedEl, step.placement);
+  }
+
+  function safeScrollIntoView(targetEl) {
+    if (!targetEl) return;
+    
+    // Find the scrollable main content ancestor container
+    let container = targetEl.parentElement;
+    while (container && container.id !== 'main-ingestion' && container.id !== 'main-draft' && container.tagName !== 'BODY') {
+      container = container.parentElement;
+    }
+    
+    if (container && (container.id === 'main-ingestion' || container.id === 'main-draft')) {
+      const containerRect = container.getBoundingClientRect();
+      const targetRect = targetEl.getBoundingClientRect();
+      
+      // Calculate top coordinate relative to container's scroll position
+      const relativeTop = targetRect.top - containerRect.top + container.scrollTop;
+      
+      // Compute target scroll top to center target vertically inside container
+      const targetScrollTop = relativeTop - (containerRect.height / 2) + (targetRect.height / 2);
+      
+      container.scrollTo({
+        top: Math.max(0, targetScrollTop),
+        behavior: 'smooth'
+      });
+    }
   }
 
   function next() {
