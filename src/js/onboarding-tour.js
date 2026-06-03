@@ -34,7 +34,7 @@ const OnboardingTour = (() => {
     {
       targetId: 'draft-grounded',
       title: 'Step 4: Live Editing',
-      text: 'Tapping directly on any grounded paragraph allows you to edit and update text in real-time, synchronizing with the model.',
+      text: 'Tap any grounded paragraph to edit and update text in real-time, synchronizing with the model.',
       placement: 'bottom',
       screen: 'draft'
     },
@@ -206,14 +206,40 @@ const OnboardingTour = (() => {
     // Position bubble above or below target
     let bubbleTop = 0;
     let bubbleLeft = left + width / 2 - bubble.offsetWidth / 2;
+    let actualPlacement = placement;
 
     if (placement === 'bottom') {
       bubbleTop = top + height + 10;
-      bubble.classList.add('tour-bubble-bottom');
+      // If it overflows the bottom of the viewport, try placing it at the top
+      if (bubbleTop + bubble.offsetHeight > viewportRect.height - 10) {
+        const altTop = top - bubble.offsetHeight - 12;
+        if (altTop >= 10) {
+          bubbleTop = altTop;
+          actualPlacement = 'top';
+        }
+      }
     } else {
       bubbleTop = top - bubble.offsetHeight - 12;
+      // If it overflows the top of the viewport, try placing it at the bottom
+      if (bubbleTop < 10) {
+        const altTop = top + height + 10;
+        if (altTop + bubble.offsetHeight <= viewportRect.height - 10) {
+          bubbleTop = altTop;
+          actualPlacement = 'bottom';
+        }
+      }
+    }
+
+    if (actualPlacement === 'bottom') {
+      bubble.classList.add('tour-bubble-bottom');
+    } else {
       bubble.classList.add('tour-bubble-top');
     }
+
+    // Constrain bubbleTop within the viewport
+    const minTop = 10;
+    const maxTop = viewportRect.height - bubble.offsetHeight - 10;
+    bubbleTop = Math.max(minTop, Math.min(maxTop, bubbleTop));
 
     bubble.style.top = `${bubbleTop}px`;
     bubble.style.left = `${bubbleLeft}px`;
@@ -238,6 +264,12 @@ const OnboardingTour = (() => {
       const arrowLeft = Math.max(minArrowLeft, Math.min(maxArrowLeft, relativeCenter));
       arrow.style.left = `${arrowLeft}px`;
     }
+  }
+
+  function reposition() {
+    if (!active || currentStepIndex === -1 || !highlightedEl) return;
+    const step = STEPS[currentStepIndex];
+    positionBubble(highlightedEl, step.placement);
   }
 
   function next() {
@@ -351,5 +383,5 @@ const OnboardingTour = (() => {
     return active;
   }
 
-  return { init, start, next, prev, end, onAction, onGenerate, onGenerateComplete, onSheetOpen, onPivotApplied, isActive };
+  return { init, start, next, prev, end, onAction, onGenerate, onGenerateComplete, onSheetOpen, onPivotApplied, isActive, reposition };
 })();

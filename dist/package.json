@@ -2,7 +2,7 @@
   "name": "socratic-editor-prototype",
   "version": "8.0.0",
   "private": true,
-  "description": "The Socratic Editor — Phase v8 (testing) & v9 (build + SQL grounding)",
+  "description": "The Socratic Editor \u2014 Phase v8 (testing) & v9 (build + SQL grounding)",
   "scripts": {
     "start": "node server/server.js"
   },

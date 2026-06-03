@@ -70,6 +70,10 @@ const App = (() => {
     } else if (streamTarget === 'draft-speculative' && !streamBuffer.includes('[CONFESSION]')) {
       document.getElementById('draft-speculative').textContent = streamBuffer.trim();
     }
+
+    if (typeof OnboardingTour !== 'undefined' && OnboardingTour.isActive()) {
+      OnboardingTour.reposition();
+    }
   }
 
   function handleGenerationComplete(data) {
